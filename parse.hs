@@ -15,8 +15,14 @@
 			N.B. ignores all non valid input without error
 				if part of the input is invalid,
 					everything after that point will be invalid till the next ~
-		5) form a tuple of form [(question,[options],[answers])]
-		5) output tuple as a string to a file or console
+		5) Output JSON to stdout in form
+			[
+				{
+					question : "...",
+					"option" : ["option1", "option2",....],
+					"answer" : ["answer1", "answer2", ....]
+				}
+			]
 -}
 
 import System.Environment
@@ -31,8 +37,10 @@ main = do
    let imp_lines = tup2str_rec$ regex$ unlines$ filter pass1 (map strip fLines)
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
    let tup_list = group $ lines imp_lines
-   -- output tuple as string
-   putStrLn $ show tup_list
+   -- convert formatted tuple to json
+   let json = show $ map jsonize tup_list 
+   -- output json as string
+   putStrLn $ show json
    -- write the results to a file
 --   writeFile (args !! 1) (tup_list)
 
@@ -73,6 +81,9 @@ getList (x:xs) c
 regex :: String -> Maybe (String, String, String, [String])
 regex [] = Nothing
 regex x = matchRegexAll (mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
+
+jsonize :: (String, [String], [String]) -> String
+jsonize (q,o,a) = "{ "++"\"question\": "++show q++"\"option\": "++show o++ "\"answer\": "++show a++ " },"
 {-
 regular expression: 
 (~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
