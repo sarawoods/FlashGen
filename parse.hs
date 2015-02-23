@@ -68,15 +68,22 @@ tup2str_rec (Just(_,m,nm,_)) = m ++ tup2str_rec (regex nm)
 group1 :: [String] -> [(String,[String],[String])]
 group1 [] = []
 group1 (x:xs)
-	| (head x == '~') = [(x,(getList xs '|'),(getList xs '>'))] ++ group1 xs
+	| (head x == '~') = [(rm_mark x,(getList xs '|'),(getList xs '>'))] ++ group1 xs
 	| otherwise = group1 xs
 
 -- getList -> form a list of all c's following '~' before the next one
 getList :: [String] -> Char -> [String]
 getList [] _ = []
 getList (x:xs) c
-	| head x == c = [x] ++ getList xs c
+	| head x == c = [(rm_mark x)] ++ getList xs c
 	| otherwise = []
+
+
+-- rem_mark -> remove the markers from the string
+rm_mark :: String -> String
+rm_mark [] = []
+rm_mark (x:xs) = strip xs
+
 
 -- regex -> use a regular expression to parse input
 regex :: String -> Maybe (String, String, String, [String])
