@@ -39,7 +39,7 @@ main = do
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
    let tup_list = group1 (lines imp_lines)
    -- convert formatted tuple to json
-   let json =  "[ " ++ (intercalate " " $ map jsonize tup_list) ++ " ]"
+   let json =  "[ " ++ (intercalate ", " $ map jsonize tup_list) ++ " ]"
    -- output json as string
    putStrLn $ json
    -- write the results to a file
@@ -84,7 +84,7 @@ regex [] = Nothing
 regex x = matchRegexAll (mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
 
 jsonize :: (String, [String], [String]) -> String
-jsonize (q,o,a) = "{ "++"\"question\": " ++show q++", \"options\": "++ show o++",\"answers\": "++show a++" },"
+jsonize (q,o,a) = "{ "++"\"question\": " ++show q++", \"options\": "++ show o++",\"answers\": "++show a++" }"
 {-
 regular expression: 
 (~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
