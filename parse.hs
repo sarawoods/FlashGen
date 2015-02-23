@@ -84,7 +84,7 @@ regex [] = Nothing
 regex x = matchRegexAll (mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
 
 jsonize :: (String, [String], [String]) -> String
-jsonize (q,o,a) = "{ "++"'question': "++show q++", 'option': "++ show o++",'answer': "++show a++ " },"
+jsonize (q,o,a) = "{ "++"\"question\": " ++show q++", \"option\": "++ show o++",\"answer\": "++show a++" },"
 {-
 regular expression: 
 (~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
