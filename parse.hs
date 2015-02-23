@@ -27,6 +27,7 @@
 
 import System.Environment
 import Text.Regex
+import Data.List
 
 main = do
    args <- getArgs
@@ -36,11 +37,11 @@ main = do
    -- grab relevant lines from removed beginning white space lines
    let imp_lines = tup2str_rec$ regex$ unlines$ filter pass1 (map strip fLines)
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
-   let tup_list = group $ lines imp_lines
+   let tup_list = group1 (lines imp_lines)
    -- convert formatted tuple to json
-   let json = show $ map jsonize tup_list 
+   let json =  "[ " ++ (intercalate " " $ map jsonize tup_list) ++ " ]"
    -- output json as string
-   putStrLn $ show json
+   putStrLn $ json
    -- write the results to a file
 --   writeFile (args !! 1) (tup_list)
 
@@ -64,11 +65,11 @@ tup2str_rec Nothing = []
 tup2str_rec (Just(_,m,nm,_)) = m ++ tup2str_rec (regex nm)
 
 -- group -> form the tuples (String, [String], [String]) to be passed to py
-group :: [String] -> [(String,[String],[String])]
-group [] = []
-group (x:xs)
-	| (head x == '~') = [(x,(getList xs '|'),(getList xs '>'))] ++ group xs
-	| otherwise = group xs
+group1 :: [String] -> [(String,[String],[String])]
+group1 [] = []
+group1 (x:xs)
+	| (head x == '~') = [(x,(getList xs '|'),(getList xs '>'))] ++ group1 xs
+	| otherwise = group1 xs
 
 -- getList -> form a list of all c's following '~' before the next one
 getList :: [String] -> Char -> [String]
@@ -83,7 +84,7 @@ regex [] = Nothing
 regex x = matchRegexAll (mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
 
 jsonize :: (String, [String], [String]) -> String
-jsonize (q,o,a) = "{ "++"\"question\": "++show q++"\"option\": "++show o++ "\"answer\": "++show a++ " },"
+jsonize (q,o,a) = "{ "++"'question': "++show q++" 'option': "++ show (intercalate " " o)++ "'answer': "++show (intercalate " " a)++ " },"
 {-
 regular expression: 
 (~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
