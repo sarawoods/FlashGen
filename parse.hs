@@ -6,7 +6,7 @@
 	Summary: 
 		1) reads contents of input file
 		2) removes leading white space from the lines of file
-		3) filters lines which have the relevent symbols attached to them:
+		3) filters lines which have the relevant symbols attached to them:
 			~ question
 			| front question options
 			> answer
@@ -19,31 +19,29 @@
 			[
 				{
 					question : "...",
-					"option" : ["option1", "option2",....],
-					"answer" : ["answer1", "answer2", ....]
+					"options" : ["option1", "option2",....],
+					"answers" : ["answer1", "answer2", ....]
 				}
 			]
 -}
-
 import System.Environment
 import Text.Regex
 import Data.List
 
 main = do
    args <- getArgs
+   -- get the content of file as string
    content <- readFile (args !! 0)
    -- convert lines of File to Text type for easy management
    let fLines = lines content
    -- grab relevant lines from removed beginning white space lines
    let imp_lines = tup2str_rec$ regex$ unlines$ filter pass1 (map strip fLines)
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
-   let tup_list = group1 (lines imp_lines)
+   let tup_list = list2tup (lines imp_lines)
    -- convert formatted tuple to json
    let json =  "[ " ++ (intercalate ", " $ map jsonize tup_list) ++ " ]"
    -- output json as string
    putStrLn $ json
-   -- write the results to a file
---   writeFile (args !! 1) (tup_list)
 
 -- strip -> function to remove all leading white space from line in file
 strip :: String -> String
@@ -64,12 +62,13 @@ tup2str_rec :: Maybe (String, String, String, [String]) -> String
 tup2str_rec Nothing = []
 tup2str_rec (Just(_,m,nm,_)) = m ++ tup2str_rec (regex nm)
 
--- group -> form the tuples (String, [String], [String]) to be passed to py
-group1 :: [String] -> [(String,[String],[String])]
-group1 [] = []
-group1 (x:xs)
-	| (head x == '~') = [(rm_mark x,(getList xs '|'),(getList xs '>'))] ++ group1 xs
-	| otherwise = group1 xs
+-- list2tup -> form the tuples (String, [String], [String]) to be passed to python
+list2tup :: [String] -> [(String,[String],[String])]
+list2tup [] = []
+list2tup (x:xs)
+	| (head x == '~') = [(rm_mark x,(getList xs '|'),(getList xs '>'))] {-
+						-} ++ list2tup xs
+	| otherwise = list2tup xs
 
 -- getList -> form a list of all c's following '~' before the next one
 getList :: [String] -> Char -> [String]
@@ -77,7 +76,6 @@ getList [] _ = []
 getList (x:xs) c
 	| head x == c = [(rm_mark x)] ++ getList xs c
 	| otherwise = []
-
 
 -- rem_mark -> remove the markers from the string
 rm_mark :: String -> String
@@ -88,13 +86,15 @@ rm_mark (x:xs) = strip xs
 -- regex -> use a regular expression to parse input
 regex :: String -> Maybe (String, String, String, [String])
 regex [] = Nothing
-regex x = matchRegexAll (mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
+regex x = matchRegexAll {-
+	-}(mkRegexWithOpts "(~[^|>]+)+([|][^~>]+)*(>[^~|]+)*" False False) x
 
+--jsonize -> convert tuple to json (question, options and answers are keys)
 jsonize :: (String, [String], [String]) -> String
-jsonize (q,o,a) = "{ "++"\"question\": " ++show q++", \"options\": "++ show o++",\"answers\": "++show a++" }"
-{-
-regular expression: 
-(~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
-([|][^~>]+)*	followed by zero or more "|"s with no "~" or ">"
-(>[^~|]+)*		followed by zero or more ">"" with no "~" or "|"
+jsonize (q,o,a) = "{ " ++ "\"question\": " ++ show q ++ ", \"options\": " ++{-
+					-} show o ++ ",\"answers\": " ++ show a ++ " }"
+{-	Regular Expression: 
+	(~[^|>]+)+ 		accept one or more "~"s with no "|" or ">"
+	([|][^~>]+)*	followed by zero or more "|"s with no "~" or ">"
+	(>[^~|]+)*		followed by zero or more ">"" with no "~" or "|"
 -}
