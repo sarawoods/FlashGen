@@ -1,11 +1,13 @@
 import wx
 import wx.grid as gridlib
 import  cStringIO
+import random
 
 
 
 from subprocess import check_output
 import json
+
 
 def getNotes():
     # once user selects file to open store that file in a variable
@@ -33,10 +35,29 @@ def getNotes():
 
     return noteCardJSON
 
+def getInfo(JSON, index, type):
+	return (JSON[index][type], index)
 
+def next(JSON, index):
+	index += 1;
+	return (JSON[index]['question'], index)
 
-def getInitialQues(JSON):
-    return JSON[0]["question"]
+def prev(JSON, index):
+	index -= 1;
+	return (JSON[index]['question'], index)
+
+def flip(JSON, index, type):
+	if type == 'question':
+		return JSON[index]['answers']
+	elif (type == 'answer'):
+		return JSON[index]['question']
+	else:
+		raise NameError("Flip has a bad type: " + type)
+
+def shuffle(JSON):
+	random.shuffle(JSON)
+	return JSON
+
 
 ########################################################################
 class LeftPanel(wx.Panel):
@@ -98,8 +119,16 @@ class RightPanel(wx.Panel):
         noteBack=wx.StaticBitmap(self, -1, bmp2, (100, 715))
         # get the data
         noteCardJSON = getNotes()
+        index = 0
         # display the initial question
-        notecardText= getInitialQues(noteCardJSON)
+        notecardText, index = next(noteCardJSON, index)
+	print noteCardJSON
+	print ""
+	print ""
+	print shuffle(noteCardJSON)
+	
+		
+	print index
         # and a few controls
         displaySize=wx.DisplaySize()
         text = wx.StaticText(self, -1, notecardText,(displaySize[0]/3-40, displaySize[1]/3+40))
