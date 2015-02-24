@@ -35,25 +35,36 @@ def getNotes():
 
     return noteCardJSON
 
+# getInfo -> gets a face specified by type for a particular card
 def getInfo(JSON, index, type):
 	return (JSON[index][type], index)
 
+# next -> gets next card, gets first card if next is clicked on last card
 def next(JSON, index):
-	index += 1;
+	if index == JSON.length - 1:
+		index = 0;
+	else:
+		index += 1;
 	return (JSON[index]['question'], index)
 
+# prev -> gets previous card, gets last card if prev is clicked on prev card
 def prev(JSON, index):
-	index -= 1;
+	if index == 0:
+		index = JSON.length - 1
+	else:
+		index -= 1;
 	return (JSON[index]['question'], index)
 
+# flip -> gets the face of the current card not currently shown
 def flip(JSON, index, type):
 	if type == 'question':
 		return JSON[index]['answers']
 	elif (type == 'answer'):
 		return JSON[index]['question']
 	else:
-		raise NameError("Flip has a bad type: " + type)
+		raise NameError("Error: Flip has a bad type: " + type)
 
+# shuffle -> returns the elements of array in a random order 
 def shuffle(JSON):
 	random.shuffle(JSON)
 	return JSON
