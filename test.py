@@ -1,7 +1,43 @@
 import wx
 import wx.grid as gridlib
 import  cStringIO
- 
+
+
+
+from subprocess import check_output
+import json
+
+def getNotes():
+    # once user selects file to open store that file in a variable
+    notesFile = "story.txt"
+    # run haskell program to get JSON string
+    noteCardString = check_output(["runhaskell", "parse.hs", notesFile])
+    # convert the string into a JSON object
+    noteCardJSON = json.loads(noteCardString)
+    # generate GUI using the JSON
+    '''
+    for card in noteCardJSON:
+        print ""
+
+        question = card["question"]
+        print "question: " + question
+
+        options = card["options"]
+        for opt in options:
+            print "   option: " + opt
+
+        answers = card["answers"]
+        for ans in answers:
+            print "   answer: " + ans
+    '''
+
+    return noteCardJSON
+
+
+
+def getInitialQues(JSON):
+    return JSON[0]["question"]
+
 ########################################################################
 class LeftPanel(wx.Panel):
     """"""
@@ -60,8 +96,11 @@ class RightPanel(wx.Panel):
         bmp2 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
         # show the bitmap, (5, 5) are upper left corner coordinates
         noteBack=wx.StaticBitmap(self, -1, bmp2, (100, 715))
+        # get the data
+        noteCardJSON = getNotes()
+        # display the initial question
+        notecardText= getInitialQues(noteCardJSON)
         # and a few controls
-        notecardText="Notecard Text Appears Here"
         displaySize=wx.DisplaySize()
         text = wx.StaticText(self, -1, notecardText,(displaySize[0]/3-40, displaySize[1]/3+40))
         text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
