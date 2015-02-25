@@ -1,10 +1,13 @@
 import wx
 import wx.grid as gridlib
 import  cStringIO
+
 import random
 
 from subprocess import check_output
 import json
+
+import  wx.lib.scrolledpanel as scrolled
 
 class Cards:
 	def __init__(self, JSON):
@@ -107,18 +110,22 @@ def shuffle(JSON):
 	random.shuffle(JSON)
 	return JSON
  '''
+
+
+ 
+
 ########################################################################
-class LeftPanel(wx.Panel):
+class LeftPanel(scrolled.ScrolledPanel):
     """"""
  
     #----------------------------------------------------------------------
     def __init__(self, parent):
         """Constructor"""
-        wx.Panel.__init__(self, parent=parent)
+        scrolled.ScrolledPanel.__init__(self, parent=parent)
 
  
-        grid = gridlib.Grid(self)
-        grid.CreateGrid(10,42)
+        #grid = gridlib.Grid(self)
+        #grid.CreateGrid(100,2)
  
         imageFile='Notecard Border 1.png'
         data = open(imageFile, "rb").read()
@@ -131,12 +138,19 @@ class LeftPanel(wx.Panel):
         note=wx.StaticBitmap(self, -1, bmp, (0, 140))
         sizer.Add(note, 0, wx.EXPAND)
         note1=wx.StaticBitmap(self, -1, bmp, (0, 140))
-        sizer.Add(note1, 1, wx.EXPAND)
+        sizer.Add(note1, 0, wx.EXPAND)
         note2=wx.StaticBitmap(self, -1, bmp, (0, 140))
-        sizer.Add(note2, 2, wx.EXPAND)
+        sizer.Add(note2, 0, wx.EXPAND)
         note3=wx.StaticBitmap(self, -1, bmp, (0, 140))
-        sizer.Add(note3, 3, wx.EXPAND)
+        sizer.Add(note3, 0, wx.EXPAND)
+        note4=wx.StaticBitmap(self, -1, bmp, (0, 140))
+        sizer.Add(note4, 0, wx.EXPAND)
+        #sizer = wx.BoxSizer(wx.VERTICAL)
+        #sizer.Add(grid,1,wx.EXPAND)
         self.SetSizer(sizer)
+        self.SetAutoLayout(1)
+        self.SetupScrolling()
+        #self.SetScrollbar(wx.VERTICAL, 0, 10, 500);
  
 ########################################################################
 class RightPanel(wx.Panel):
@@ -148,12 +162,21 @@ class RightPanel(wx.Panel):
         noteCardJSON = getNotes()
 	cards = Cards(noteCardJSON)
         wx.Panel.__init__(self, parent=parent)
-        font = wx.SystemSettings_GetFont(wx.SYS_SYSTEM_FONT)
-        font.SetPointSize(9)
         #load buttons
+        # panel needed to display button correctly
+        
+ 
+        nextImage = "NextButtonNew.png"
+        previousImage="BackButtonNew.png"
         #Need to disable button if add end of list or start of list
-        self.backButton = wx.Button(self, label='Previous',pos=(20, 305), size=(80, 50))
-        self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
+        #self.backButton = wx.Button(self, label='Previous',pos=(20, 305), size=(80, 50))
+        image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
+        pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5))
+        image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
+        pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5))
+        #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
         #Binds the trigger event fror going to previous flashcard
         #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
 	self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
