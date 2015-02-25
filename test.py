@@ -62,7 +62,7 @@ def flip(JSON, index, type):
 	elif (type == 'answer'):
 		return JSON[index]['question']
 	else:
-		raise NameError("Error: Flip has a bad type: " + type)
+		raise NameError("Error: Flip has a bad type -> " + type)
 
 # shuffle -> returns the elements of array in a random order 
 def shuffle(JSON):
