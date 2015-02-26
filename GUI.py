@@ -134,22 +134,37 @@ class LeftPanel(scrolled.ScrolledPanel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         # convert to a bitmap
         bmp = wx.BitmapFromImage( wx.ImageFromStream( stream ))
+        i=1
+        a = "note"
+        test = a + str(i)
+        notecardText="Notecard Text Appears Here"
+        sizer.AddSpacer(10)
+        #use test to loop through and add the notecards dynamically
         # show the bitmap, (5, 5) are upper left corner coordinates
         note=wx.StaticBitmap(self, -1, bmp, (0, 140))
+        displaySize=wx.DisplaySize()
+        text = wx.StaticText(self, -1, notecardText,(0, 140))
+        text.SetFont(wx.Font(5, wx.SWISS, wx.NORMAL, wx.BOLD))
+        text.SetSize(text.GetBestSize())
+        sizer.Add(text,0,wx.EXPAND)
         sizer.Add(note, 0, wx.EXPAND)
-        note1=wx.StaticBitmap(self, -1, bmp, (0, 140))
-        sizer.Add(note1, 0, wx.EXPAND)
+        sizer.AddSpacer(10)
+        test=wx.StaticBitmap(self, -1, bmp, (0, 140))
+        sizer.Add(test, 0, wx.EXPAND)
+        sizer.AddSpacer(10)
         note2=wx.StaticBitmap(self, -1, bmp, (0, 140))
         sizer.Add(note2, 0, wx.EXPAND)
+        sizer.AddSpacer(10)
         note3=wx.StaticBitmap(self, -1, bmp, (0, 140))
         sizer.Add(note3, 0, wx.EXPAND)
+        sizer.AddSpacer(10)
         note4=wx.StaticBitmap(self, -1, bmp, (0, 140))
         sizer.Add(note4, 0, wx.EXPAND)
-        #sizer = wx.BoxSizer(wx.VERTICAL)
-        #sizer.Add(grid,1,wx.EXPAND)
         self.SetSizer(sizer)
         self.SetAutoLayout(1)
         self.SetupScrolling()
+        
+        
         #self.SetScrollbar(wx.VERTICAL, 0, 10, 500);
  
 ########################################################################
@@ -168,6 +183,7 @@ class RightPanel(wx.Panel):
  
         nextImage = "NextButtonNew.png"
         previousImage="BackButtonNew.png"
+        flipImage="FlipButton1.png"
         #Need to disable button if add end of list or start of list
         #self.backButton = wx.Button(self, label='Previous',pos=(20, 305), size=(80, 50))
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
@@ -176,6 +192,9 @@ class RightPanel(wx.Panel):
         image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
         pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5))
+        image3 = wx.Image(flipImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        self.flipButton = wx.BitmapButton(self, id=-1, bitmap=image3,
+        pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5))
         #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
         #Binds the trigger event fror going to previous flashcard
         #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
@@ -187,6 +206,9 @@ class RightPanel(wx.Panel):
         self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
         # optional tooltip
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
+        self.flipButton.Bind(wx.EVT_BUTTON, self.flipButtonClick)
+        # optional tooltip
+        self.flipButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
         #for displaying notecard image
         imageFile1='Notecard Border.png'
         data = open(imageFile1, "rb").read()
@@ -197,14 +219,6 @@ class RightPanel(wx.Panel):
         # show the bitmap, (5, 5) are upper left corner coordinates
         noteFront=wx.StaticBitmap(self, -1, bmp1, (100, 15))
 
-        imageFile2='Notecard Border.png'
-        data = open(imageFile2, "rb").read()
-        # convert to a data stream
-        stream = cStringIO.StringIO(data)
-        # convert to a bitmap
-        bmp2 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
-        # show the bitmap, (5, 5) are upper left corner coordinates
-        noteBack=wx.StaticBitmap(self, -1, bmp2, (100, 715))
         # and a few controls
         displaySize=wx.DisplaySize()
 		
@@ -231,6 +245,10 @@ class RightPanel(wx.Panel):
 		cards.next()
 		self.updateText.Label = cards.getInfo()
 
+
+    #next button click event
+    def flipButtonClick(self,event):
+        self.flipButton.Hide()
 
 
 ########################################################################        
