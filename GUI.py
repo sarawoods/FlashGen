@@ -137,8 +137,9 @@ class LeftPanel(scrolled.ScrolledPanel):
         i=1
         a = "note"
         test = a + str(i)
-        notecardText="Notecard Text Appears Here"
+        
         sizer.AddSpacer(10)
+        notecardText="Notecard Text Appears Here"
         #use test to loop through and add the notecards dynamically
         # show the bitmap, (5, 5) are upper left corner coordinates
         note=wx.StaticBitmap(self, -1, bmp, (0, 140))
@@ -180,24 +181,26 @@ class RightPanel(wx.Panel):
         #load buttons
         # panel needed to display button correctly
         
- 
+        sizer = wx.BoxSizer(wx.VERTICAL)
         nextImage = "NextButtonNew.png"
         previousImage="BackButtonNew.png"
         flipImage="FlipButton1.png"
-        #Need to disable button if add end of list or start of list
-        #self.backButton = wx.Button(self, label='Previous',pos=(20, 305), size=(80, 50))
+        #Need to loop if at start of list or end of list
+
+        #Next Button
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
         pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5))
+
+        #Back Button
         image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
         pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5))
+
+        #Flip Button
         image3 = wx.Image(flipImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.flipButton = wx.BitmapButton(self, id=-1, bitmap=image3,
         pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5))
-        #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
-        #Binds the trigger event fror going to previous flashcard
-        #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
 	self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
         # optional tooltip
         self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
@@ -208,7 +211,7 @@ class RightPanel(wx.Panel):
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
         self.flipButton.Bind(wx.EVT_BUTTON, self.flipButtonClick)
         # optional tooltip
-        self.flipButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
+        self.flipButton.SetToolTip(wx.ToolTip("Go to Front/Back of Flashcard"))
         #for displaying notecard image
         imageFile1='Notecard Border.png'
         data = open(imageFile1, "rb").read()
@@ -220,14 +223,19 @@ class RightPanel(wx.Panel):
         noteFront=wx.StaticBitmap(self, -1, bmp1, (100, 15))
 
         # and a few controls
-        notecardText="Notecard Text Appears Here"
+        width=bmp1.GetWidth()-70
+        notecardText="Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line"
+        print(len(notecardText))
+        height=bmp1.GetHeight()/2-(14*(len(notecardText)/85))
         displaySize=wx.DisplaySize()
-        text = wx.StaticText(self, -1, notecardText,(displaySize[0]/3-40, displaySize[1]/3+40))
+        text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_VERTICAL| wx.TE_MULTILINE ))
+        #text = wx.TextCtrl(self, -1, notecardText,pos=(170,30),size=(width-20,bmp1.GetHeight()-60),style=(wx.ALIGN_CENTRE_VERTICAL| wx.TE_MULTILINE ))
+        #print(text.getTextLength());
         text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         text.SetSize(text.GetBestSize())
+        text.Wrap(width)
 		
 	self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))
-		
 
 		######################################################
 		##				Testing functionality				##
