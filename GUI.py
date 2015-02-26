@@ -10,43 +10,53 @@ import json
 import  wx.lib.scrolledpanel as scrolled
 
 class Cards:
-	def __init__(self, JSON):
-		self.JSON = JSON
-		self.index = 0
-		self.face = "question"
+    def __init__(self, JSON):
+        self.JSON = JSON
+        self.index = 0
+        self.face = "question"
 	
-	def next(self):
-		if self.index == len(self.JSON) - 1:
-			self.index = 0
-		else:
-			self.index = self.index + 1
-		self.face = "question"
+    def next(self):
+        if self.index == len(self.JSON) - 1:
+            self.index = 0
+        else:
+            self.index = self.index + 1
+        self.face = "question"
 		
-	def prev(self):
-		if self.index == 0:
-			self.index = len(self.JSON) -1
-		else:
-			self.index = self.index - 1;
-		self.face = "question"
+    def prev(self):
+        if self.index == 0:
+            self.index = len(self.JSON) -1
+        else:
+            self.index = self.index - 1;
+        self.face = "question"
 		
-	# flip -> gets the face of the current card not currently shown
-	def flip(self):
-		if self.face == 'question':
-			self.face = "answers"
-		elif (self.face == 'answers'):
-			self.face = "question"
-		else:
-			raise NameError("Error: Flip has a bad type -> " + type)
+    # flip -> gets the face of the current card not currently shown
+    def flip(self):
+        if self.face == 'question':
+            self.face = "answers"
+        elif (self.face == 'answers'):
+            self.face = "question"
+        else:
+            raise NameError("Error: Flip has a bad type -> " + type)
 
 	# shuffle -> returns the elements of array in a random order 
-	def shuffle(self):
-		random.shuffle(self.JSON)
+    def shuffle(self):
+        random.shuffle(self.JSON)
 		
-	def getInfo(self):
-		print self.index
-		print self.face
-		print self.JSON[self.index][self.face]
-		return self.JSON[self.index][self.face]
+    def getInfo(self):
+        if self.face == "question":
+            question = self.JSON[self.index][self.face]
+            options = ""
+            for opt in self.JSON[self.index]["options"]:
+                options = "\n" + options + "    - " + opt
+            return question + options
+        else:
+            answers = ""
+            if len(self.JSON[self.index][self.face]) == 1:
+                answers = self.JSON[self.index][self.face][0]
+            else:
+                for ans in self.JSON[self.index][self.face]:
+                    answers = answers + "- " + ans + "\n"
+            return answers
 		
 
 
@@ -176,7 +186,7 @@ class RightPanel(wx.Panel):
         """Constructor"""
 				# get the data
         noteCardJSON = getNotes()
-	cards = Cards(noteCardJSON)
+        cards = Cards(noteCardJSON)
         wx.Panel.__init__(self, parent=parent)
         #load buttons
         # panel needed to display button correctly
@@ -201,15 +211,19 @@ class RightPanel(wx.Panel):
         image3 = wx.Image(flipImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.flipButton = wx.BitmapButton(self, id=-1, bitmap=image3,
         pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5))
-	self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
+
+        #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
+        #Binds the trigger event fror going to previous flashcard
+        #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
+        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
         # optional tooltip
         self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
         #Binds the trigger event for going to previous flashcard
         #self.nextButton.Bind(wx.EVT_BUTTON, self.nextButtonClick)
-	self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
+        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
         # optional tooltip
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
-        self.flipButton.Bind(wx.EVT_BUTTON, self.flipButtonClick)
+        self.flipButton.Bind(wx.EVT_BUTTON, lambda event: self.flipButtonClick(event, cards))
         # optional tooltip
         self.flipButton.SetToolTip(wx.ToolTip("Go to Front/Back of Flashcard"))
         #for displaying notecard image
@@ -223,6 +237,7 @@ class RightPanel(wx.Panel):
         noteFront=wx.StaticBitmap(self, -1, bmp1, (100, 15))
 
         # and a few controls
+
         width=bmp1.GetWidth()-70
         notecardText="Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line"
         print(len(notecardText))
@@ -234,8 +249,16 @@ class RightPanel(wx.Panel):
         text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         text.SetSize(text.GetBestSize())
         text.Wrap(width)
+
+        displaySize=wx.DisplaySize()
 		
-	self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))
+        self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))  # CENTER!!!!
+        self.updateText.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.updateText.SetSize(self.updateText.GetBestSize())
+
+        # initialize the displayed question
+        self.updateText.Label = cards.getInfo()
+		
 
 		######################################################
 		##				Testing functionality				##
@@ -254,8 +277,10 @@ class RightPanel(wx.Panel):
 
 
     #next button click event
-    def flipButtonClick(self,event):
-        self.flipButton.Hide()
+    def flipButtonClick(self,event, cards):
+        cards.flip()
+        self.updateText.Label = cards.getInfo()
+
 
 ########################################################################        
      
