@@ -160,7 +160,7 @@ class RightPanel(wx.Panel):
         """Constructor"""
 				# get the data
         noteCardJSON = getNotes()
-	cards = Cards(noteCardJSON)
+        cards = Cards(noteCardJSON)
         wx.Panel.__init__(self, parent=parent)
         #load buttons
         # panel needed to display button correctly
@@ -179,12 +179,12 @@ class RightPanel(wx.Panel):
         #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
         #Binds the trigger event fror going to previous flashcard
         #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
-	self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
+        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
         # optional tooltip
         self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
         #Binds the trigger event for going to previous flashcard
         #self.nextButton.Bind(wx.EVT_BUTTON, self.nextButtonClick)
-	self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
+        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
         # optional tooltip
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
         #for displaying notecard image
@@ -206,13 +206,14 @@ class RightPanel(wx.Panel):
         # show the bitmap, (5, 5) are upper left corner coordinates
         noteBack=wx.StaticBitmap(self, -1, bmp2, (100, 715))
         # and a few controls
-        notecardText="Notecard Text Appears Here"
         displaySize=wx.DisplaySize()
-        text = wx.StaticText(self, -1, notecardText,(displaySize[0]/3-40, displaySize[1]/3+40))
-        text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        text.SetSize(text.GetBestSize())
 		
-	self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))
+        self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))  # CENTER!!!!
+        self.updateText.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.updateText.SetSize(self.updateText.GetBestSize())
+
+        # initialize the displayed question
+        self.updateText.Label = cards.getInfo()
 		
 
 		######################################################
@@ -229,6 +230,7 @@ class RightPanel(wx.Panel):
     def nextButtonClick(self,event, cards):
 		cards.next()
 		self.updateText.Label = cards.getInfo()
+
 
 
 ########################################################################        
