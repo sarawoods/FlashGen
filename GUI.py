@@ -257,8 +257,7 @@ class RightPanel(wx.Panel):
         # and a few controls
 
         width=bmp1.GetWidth()-70
-        notecardText="Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line"
-        print(len(notecardText))
+        notecardText=""
         height=bmp1.GetHeight()/2-(14*(len(notecardText)/85))
         displaySize=wx.DisplaySize()
         text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
