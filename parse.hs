@@ -2,6 +2,7 @@
 	Program: FlashGen
 	File: parse.hs
 	Author: Brendan Cicchi
+	Team: Brendan Cicchi, Remington Maxwell, Sara Woods
 	
 	Summary: 
 		1) reads contents of input file

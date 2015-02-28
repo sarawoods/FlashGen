@@ -1,6 +1,8 @@
 import wx
+import os
 import wx.grid as gridlib
 import  cStringIO
+import sys
 
 import random
 
@@ -43,26 +45,30 @@ class Cards:
         random.shuffle(self.JSON)
 		
     def getInfo(self):
-        if self.face == "question":
-            question = self.JSON[self.index][self.face]
-            options = ""
-            for opt in self.JSON[self.index]["options"]:
-                options = "\n" + options + "    - " + opt
-            return question + options
-        else:
-            answers = ""
-            if len(self.JSON[self.index][self.face]) == 1:
-                answers = self.JSON[self.index][self.face][0]
+        if len(self.JSON) > 0:
+            if self.face == "question":
+                question = self.JSON[self.index][self.face]
+                options = ""
+                for opt in self.JSON[self.index]["options"]:
+                    options = "\n" + options + "    - " + opt
+                return question + options
             else:
-                for ans in self.JSON[self.index][self.face]:
-                    answers = answers + "- " + ans + "\n"
-            return answers
-		
+                answers = ""
+                if len(self.JSON[self.index][self.face]) == 1:
+                    answers = self.JSON[self.index][self.face][0]
+                else:
+                    for ans in self.JSON[self.index][self.face]:
+                        answers = answers + "- " + ans + "\n"
+                return answers
+        else:
+		  return "Sorry, the file you uploaded did not parse any questions.\n" + \
+                 "Please check your formatting or try uploading another file." + \
+                 "Check out our tutorial for help"
 
 
-def getNotes():
+def getNotes(path):
     # once user selects file to open store that file in a variable
-    notesFile = "story.txt"
+    notesFile = path
     # run haskell program to get JSON string
     noteselftring = check_output(["runhaskell", "parse.hs", notesFile])
     # convert the string into a JSON object
@@ -185,7 +191,16 @@ class RightPanel(wx.Panel):
     def __init__(self, parent):
         """Constructor"""
 				# get the data
-        noteCardJSON = getNotes()
+
+        wildcard = "Text File (*.txt)|*.txt"
+        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
+        if dialog.ShowModal() == wx.ID_OK:
+            path = dialog.GetPath() 
+        else:
+            sys.exit("No text file selected") 
+
+        dialog.Destroy()
+        noteCardJSON = getNotes(path)
         cards = Cards(noteCardJSON)
         wx.Panel.__init__(self, parent=parent)
         #load buttons
@@ -197,35 +212,38 @@ class RightPanel(wx.Panel):
         flipImage="FlipButton1.png"
         #Need to loop if at start of list or end of list
 
-        #Next Button
+        #Next Button Init
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
-        pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5))
+        pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5), style=wx.BU_AUTODRAW)
+        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
+        self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
 
-        #Back Button
+
+
+        #Back Button Init
         image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
-        pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5))
+        pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
+        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
+        self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
 
-        #Flip Button
+        #Flip Button Init
         image3 = wx.Image(flipImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.flipButton = wx.BitmapButton(self, id=-1, bitmap=image3,
-        pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5))
+        pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
+        self.flipButton.Bind(wx.EVT_BUTTON, lambda event: self.flipButtonClick(event, cards))
+        self.flipButton.SetToolTip(wx.ToolTip("Go to Front/Back of Flashcard"))
 
         #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
         #Binds the trigger event fror going to previous flashcard
         #self.backButton.Bind(wx.EVT_BUTTON, self.backButtonClick)
-        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
+        
         # optional tooltip
-        self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
+        
         #Binds the trigger event for going to previous flashcard
         #self.nextButton.Bind(wx.EVT_BUTTON, self.nextButtonClick)
-        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
-        # optional tooltip
-        self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
-        self.flipButton.Bind(wx.EVT_BUTTON, lambda event: self.flipButtonClick(event, cards))
-        # optional tooltip
-        self.flipButton.SetToolTip(wx.ToolTip("Go to Front/Back of Flashcard"))
+                
         #for displaying notecard image
         imageFile1='Notecard Border.png'
         data = open(imageFile1, "rb").read()
@@ -243,7 +261,7 @@ class RightPanel(wx.Panel):
         print(len(notecardText))
         height=bmp1.GetHeight()/2-(14*(len(notecardText)/85))
         displaySize=wx.DisplaySize()
-        text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_VERTICAL| wx.TE_MULTILINE ))
+        text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
         #text = wx.TextCtrl(self, -1, notecardText,pos=(170,30),size=(width-20,bmp1.GetHeight()-60),style=(wx.ALIGN_CENTRE_VERTICAL| wx.TE_MULTILINE ))
         #print(text.getTextLength());
         text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
@@ -258,11 +276,6 @@ class RightPanel(wx.Panel):
 
         # initialize the displayed question
         self.updateText.Label = cards.getInfo()
-		
-
-		######################################################
-		##				Testing functionality				##
-		######################################################
 
 
     #back button click event
@@ -309,6 +322,7 @@ class MyForm(wx.Frame):
 # Run the program
 if __name__ == "__main__":
     app = wx.App(False)
+
     frame = MyForm()
     frame.Show()
     loadButton = wx.Button(frame, label='Open',pos=(225, 5), size=(80, 25))
