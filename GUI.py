@@ -74,60 +74,9 @@ def getNotes(path):
     # convert the string into a JSON object
     noteCardJSON = json.loads(noteselftring)
     # generate GUI using the JSON
-    '''
-    for card in noteCardJSON:
-        print ""
 
-        question = card["question"]
-        print "question: " + question
-
-        options = card["options"]
-        for opt in options:
-            print "   option: " + opt
-
-        answers = card["answers"]
-        for ans in answers:
-            print "   answer: " + ans
-    '''
 
     return noteCardJSON
-'''
-# getInfo -> gets a face specified by type for a particular card
-def getInfo(JSON, index, type):
-	return (JSON[index][type], index)
-
-# next -> gets next card, gets first card if next is clicked on last card
-def next(JSON, index):
-	if index == len(JSON) - 1:
-		index = 0;
-	else:
-		index += 1;
-	return (JSON[index]['question'], index)
-
-# prev -> gets previous card, gets last card if prev is clicked on prev card
-def prev(JSON, index):
-	if index == 0:
-		index = len(JSON) - 1
-	else:
-		index -= 1;
-	return (JSON[index]['question'], index)
-
-# flip -> gets the face of the current card not currently shown
-def flip(JSON, index, type):
-	if type == 'question':
-		return JSON[index]['answers']
-	elif (type == 'answer'):
-		return JSON[index]['question']
-	else:
-		raise NameError("Error: Flip has a bad type -> " + type)
-
-# shuffle -> returns the elements of array in a random order 
-def shuffle(JSON):
-	random.shuffle(JSON)
-	return JSON
- '''
-
-
  
 
 ########################################################################
@@ -250,49 +199,78 @@ class RightPanel(wx.Panel):
         # convert to a data stream
         stream = cStringIO.StringIO(data)
         # convert to a bitmap
-        bmp1 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
+        self.bmp1 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
         # show the bitmap, (5, 5) are upper left corner coordinates
-        noteFront=wx.StaticBitmap(self, -1, bmp1, (100, 15))
+        noteFront=wx.StaticBitmap(self, -1, self.bmp1, (100, 15))
 
-        # and a few controls
+        self.updateText(cards)
 
-        width=bmp1.GetWidth()-70
-        notecardText="Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line"
-        print(len(notecardText))
-        height=bmp1.GetHeight()/2-(14*(len(notecardText)/85))
+
+    # Gets the new text for the card, centers it, wraps it, and displays
+    def updateText(self, cards):
+        newText = cards.getInfo()
+        width = self.bmp1.GetWidth()-70
+        height = self.bmp1.GetHeight()/2-(14*(len(newText)/85))
+        
         displaySize=wx.DisplaySize()
-        text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
-        #text = wx.TextCtrl(self, -1, notecardText,pos=(170,30),size=(width-20,bmp1.GetHeight()-60),style=(wx.ALIGN_CENTRE_VERTICAL| wx.TE_MULTILINE ))
-        #print(text.getTextLength());
-        text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        text.SetSize(text.GetBestSize())
-        text.Wrap(width)
-
-        displaySize=wx.DisplaySize()
-		
-        self.updateText = wx.StaticText(self, -1, "", (displaySize[0]/3-40, displaySize[1]/3+40))  # CENTER!!!!
+        
+        self.updateText = wx.StaticText(self, -1, newText, (145, height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))  # CENTER!!!!
         self.updateText.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.updateText.SetSize(self.updateText.GetBestSize())
+        self.updateText.Wrap(width)
 
-        # initialize the displayed question
-        self.updateText.Label = cards.getInfo()
+        sizer_v = wx.BoxSizer(wx.VERTICAL)
+        sizer_h = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_h.Add(self.updateText, 1, wx.CENTER)
+        sizer_v.Add(sizer_h, 1, wx.CENTER)
+        self.SetSizer(sizer_v)
 
+        self.updateText.Label = newText
+
+'''
+  # Gets the new text for the card, centers it, wraps it, and displays
+    def updateText(self, cards):
+        newText = cards.getInfo()
+        print newText
+        width = self.bmp1.GetWidth()-70
+        height = self.bmp1.GetHeight()/2-(14*(len(newText)/85))
+        
+        displaySize=wx.DisplaySize()
+        
+        self.text.SetSizeWH(width, height)
+        self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        #self.updateText.SetSize(self.updateText.GetBestSize())
+        self.text.Wrap(width)
+
+        sizer_v = wx.BoxSizer(wx.VERTICAL)
+        sizer_h = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_h.Add(self.updateText, 1, wx.CENTER)
+        sizer_v.Add(sizer_h, 1, wx.CENTER)
+        self.SetSizer(sizer_v)
+
+        self.text.Label = newText
+'''
 
     #back button click event
     def backButtonClick(self,event, cards):
-		cards.prev()
-		self.updateText.Label = cards.getInfo()
+        cards.prev()
+        #self.updateText.Label = cards.getInfo()
+        self.updateText(cards)
 
     #next button click event
     def nextButtonClick(self,event, cards):
-		cards.next()
-		self.updateText.Label = cards.getInfo()
+        cards.next()
+        #self.updateText.Label = cards.getInfo()
+        self.updateText(cards)
+
 
 
     #next button click event
     def flipButtonClick(self,event, cards):
         cards.flip()
-        self.updateText.Label = cards.getInfo()
+        #self.updateText.Label = cards.getInfo()
+        self.updateText(cards)
+
 
 
 ########################################################################        
