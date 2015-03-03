@@ -1,21 +1,21 @@
 The running rhino moved swiftly across the many plains of Bangladesh into the deserted town of WanaFanaLingo.
 Perplexed by the empty blocks along the path, the rhino decided to turn around and go to bed.
-~ q1
-> A1
+~ Where did the rhino run?
+> Across the plains of Bangladesh
 sdad sajk k;jas;kja;k aj; ;lka ;lfka ;lfn /snlka 
-~ q2
-	> a2
+~ Why did the rhino run?
+	> He needed to exercise.
 	aj
 	aj
 	sajk
-	> a3
+	> He was also trying to outrun his fears.	
 	
 	decided
-	| foo bar
+	| as;odghnl
 	
 	> adsndlsanfkn 
 	
-	~ q3
-| flubber
+	~ Why do some people have cold hands all the time?
+| Maybe they are cold hearted people.
 	
-					~ q4
+					~Why are doughnuts so yummy?

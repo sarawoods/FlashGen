@@ -128,18 +128,7 @@ class RightPanel(wx.Panel):
         bmp2 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
         # show the bitmap, (5, 5) are upper left corner coordinates
         noteBack=wx.StaticBitmap(self, -1, bmp2, (100, 715))
-        # get the data
-        noteCardJSON = getNotes()
-        index = 0
-        # display the initial question
-        notecardText, index = next(noteCardJSON, index)
-	print noteCardJSON
-	print ""
-	print ""
-	print shuffle(noteCardJSON)
-	
-		
-	print index
+        
         # and a few controls
         displaySize=wx.DisplaySize()
         text = wx.StaticText(self, -1, notecardText,(displaySize[0]/3-40, displaySize[1]/3+40))

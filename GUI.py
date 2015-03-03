@@ -63,7 +63,7 @@ class Cards:
         else:
 		  return "Sorry, the file you uploaded did not parse any questions.\n" + \
                  "Please check your formatting or try uploading another file." + \
-                 "Check out our tutorial for help"
+                 "Check out our tutorial for help."
 
 
 def getNotes(path):
@@ -143,7 +143,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         #grid = gridlib.Grid(self)
         #grid.CreateGrid(100,2)
  
-        imageFile='Notecard Border 1.png'
+        imageFile='images\\borders\\Notecard Border 1.png'
         data = open(imageFile, "rb").read()
         # convert to a data stream
         stream = cStringIO.StringIO(data)
@@ -207,9 +207,9 @@ class RightPanel(wx.Panel):
         # panel needed to display button correctly
         
         sizer = wx.BoxSizer(wx.VERTICAL)
-        nextImage = "NextButtonNew.png"
-        previousImage="BackButtonNew.png"
-        flipImage="FlipButton1.png"
+        nextImage = "images\\buttons\\NextButtonNew.png"
+        previousImage="images\\buttons\\BackButtonNew.png"
+        flipImage="images\\buttons\\FlipButton1.png"
         #Need to loop if at start of list or end of list
 
         #Next Button Init
@@ -245,7 +245,7 @@ class RightPanel(wx.Panel):
         #self.nextButton.Bind(wx.EVT_BUTTON, self.nextButtonClick)
                 
         #for displaying notecard image
-        imageFile1='Notecard Border.png'
+        imageFile1='images\\borders\\Notecard Border.png'
         data = open(imageFile1, "rb").read()
         # convert to a data stream
         stream = cStringIO.StringIO(data)
@@ -257,7 +257,8 @@ class RightPanel(wx.Panel):
         # and a few controls
 
         width=bmp1.GetWidth()-70
-        notecardText=""
+        notecardText="Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line Notecard Text Appears Here Testing the functionality of how the word wrap is working and see if it actually goes to the next line"
+        print(len(notecardText))
         height=bmp1.GetHeight()/2-(14*(len(notecardText)/85))
         displaySize=wx.DisplaySize()
         text = wx.StaticText(self, -1, notecardText,(145,height),style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
