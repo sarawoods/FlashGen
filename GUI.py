@@ -10,6 +10,7 @@ from subprocess import check_output
 import json
 
 import  wx.lib.scrolledpanel as scrolled
+from wx.lib.wordwrap import wordwrap
 
 class Cards:
     def __init__(self, JSON):
@@ -203,53 +204,34 @@ class RightPanel(wx.Panel):
         # show the bitmap, (5, 5) are upper left corner coordinates
         noteFront=wx.StaticBitmap(self, -1, self.bmp1, (100, 15))
 
-        self.updateText(cards)
+        self.width = self.bmp1.GetWidth()-70
+        self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
 
+        self.text = wx.StaticText(self, -1, "", (self.width, self.height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
+        self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.text.SetSize(self.text.GetBestSize())
+        self.text.Wrap(self.width)
+
+        self.updateText(cards)
 
     # Gets the new text for the card, centers it, wraps it, and displays
     def updateText(self, cards):
-        newText = cards.getInfo()
-        width = self.bmp1.GetWidth()-70
-        height = self.bmp1.GetHeight()/2-(14*(len(newText)/85))
-        
+        self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
+        newText = wordwrap(cards.getInfo(), 450, wx.ClientDC(self), breakLongWords=True, margin=0)
+
         displaySize=wx.DisplaySize()
-        
-        self.updateText = wx.StaticText(self, -1, newText, (145, height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))  # CENTER!!!!
-        self.updateText.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        self.updateText.SetSize(self.updateText.GetBestSize())
-        self.updateText.Wrap(width)
-
-        sizer_v = wx.BoxSizer(wx.VERTICAL)
-        sizer_h = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_h.Add(self.updateText, 1, wx.CENTER)
-        sizer_v.Add(sizer_h, 1, wx.CENTER)
-        self.SetSizer(sizer_v)
-
-        self.updateText.Label = newText
-
-'''
-  # Gets the new text for the card, centers it, wraps it, and displays
-    def updateText(self, cards):
-        newText = cards.getInfo()
-        print newText
-        width = self.bmp1.GetWidth()-70
-        height = self.bmp1.GetHeight()/2-(14*(len(newText)/85))
-        
-        displaySize=wx.DisplaySize()
-        
-        self.text.SetSizeWH(width, height)
-        self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        #self.updateText.SetSize(self.updateText.GetBestSize())
-        self.text.Wrap(width)
-
-        sizer_v = wx.BoxSizer(wx.VERTICAL)
-        sizer_h = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_h.Add(self.updateText, 1, wx.CENTER)
-        sizer_v.Add(sizer_h, 1, wx.CENTER)
-        self.SetSizer(sizer_v)
 
         self.text.Label = newText
-'''
+
+        self.text.SetSize(self.text.GetBestSize())
+
+        sizer_v = wx.BoxSizer(wx.VERTICAL)
+        sizer_h = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_h.Add(self.text, 1, wx.CENTER)
+        sizer_v.Add(sizer_h, 1, wx.CENTER)
+        self.SetSizer(sizer_v)
+
+        
 
     #back button click event
     def backButtonClick(self,event, cards):
