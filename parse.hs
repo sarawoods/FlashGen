@@ -39,10 +39,8 @@ main = do
    let imp_lines = tup2str_rec$ regex$ unlines$ filter pass1 (map strip fLines)
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
    let tup_list = list2tup (lines imp_lines)
-   -- add the hyphen and spaces to options and answers
-   let awesome = map spacer tup_list
    -- convert formatted tuple to json
-   let json =  "[ " ++ (intercalate ", " $ map jsonize awesome) ++ " ]"
+   let json =  "[ " ++ (intercalate ", " $ map jsonize tup_list) ++ " ]"
    -- output json as string
    putStrLn json
    
@@ -120,3 +118,5 @@ spacer:: (String, [String], [String]) -> (String, [String], [String])
 spacer (q, o, a) = (fs q, (map fs o), (map fs  a))
 	where
 		fs = (intercalate "\n") . (wordwrap 85) . words
+
+
