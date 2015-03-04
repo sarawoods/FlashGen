@@ -224,7 +224,7 @@ class RightPanel(wx.Panel):
         #displaySize=wx.DisplaySize()
 
         self.text.Label = newText
-        self.text.SetBackgroundColour((0,0,255))
+        #self.text.SetBackgroundColour((0,0,255))
 
         self.text.SetSize(self.text.GetBestSize())
 
