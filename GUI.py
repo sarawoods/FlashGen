@@ -207,7 +207,8 @@ class RightPanel(wx.Panel):
         self.width = self.bmp1.GetWidth()-70
         self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
 
-        self.text = wx.StaticText(self, -1, "", (self.width, self.height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
+        #self.text = wx.StaticText(self, -1, "", (self.width, self.height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
+        self.text = wx.StaticText(self, label="", size = (self.width, self.height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
 
@@ -217,10 +218,12 @@ class RightPanel(wx.Panel):
     def updateText(self, cards):
         self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
         newText = wordwrap(cards.getInfo(), 450, wx.ClientDC(self), breakLongWords=True, margin=0)
+        #newText = cards.getInfo()
 
-        displaySize=wx.DisplaySize()
+        #displaySize=wx.DisplaySize()
 
         self.text.Label = newText
+        self.text.SetBackgroundColour((0,0,255))
 
         self.text.SetSize(self.text.GetBestSize())
 
