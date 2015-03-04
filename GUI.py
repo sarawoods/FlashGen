@@ -210,7 +210,6 @@ class RightPanel(wx.Panel):
         self.text = wx.StaticText(self, -1, "", (self.width, self.height), style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
-        self.text.Wrap(self.width)
 
         self.updateText(cards)
 
