@@ -39,10 +39,13 @@ main = do
    let imp_lines = tup2str_rec$ regex$ unlines$ filter pass1 (map strip fLines)
    -- group lines by (quest,[opt],[ans])in tuple (String, [String], [String])
    let tup_list = list2tup (lines imp_lines)
+   -- add the hyphen and spaces to options and answers
+   let awesome = map spacer tup_list
    -- convert formatted tuple to json
-   let json =  "[ " ++ (intercalate ", " $ map jsonize tup_list) ++ " ]"
+   let json =  "[ " ++ (intercalate ", " $ map jsonize awesome) ++ " ]"
    -- output json as string
-   putStrLn $ json
+   putStrLn json
+   
 
 -- strip -> function to remove all leading white space from line in file
 strip :: String -> String
@@ -99,3 +102,21 @@ jsonize (q,o,a) = "{ " ++ "\"question\": " ++ show q ++ ", \"options\": " ++{-
 	([|][^~>]+)*	followed by zero or more "|"s with no "~" or ">"
 	(>[^~|]+)*		followed by zero or more ">"" with no "~" or "|"
 -}
+
+-- ["The", "The quick", "The quick brown", ...]
+concats = scanl1 (\s v -> s ++ " " ++ v)
+
+-- takes list of words, returns list of lines
+wordwrap :: Int -> [String] -> [String]
+wordwrap maxwidth [] = []
+wordwrap maxwidth ws = sentence : (wordwrap maxwidth restwords)
+    where
+        zipped = zip (concats ws) ws
+        (sentences, rest) = span (\(s,w) -> (length s) <= maxwidth) zipped
+        sentence = last (map fst sentences)
+        restwords = map snd rest
+
+spacer:: (String, [String], [String]) -> (String, [String], [String])
+spacer (q, o, a) = (fs q, (map fs o), (map fs  a))
+	where
+		fs = (intercalate "\n") . (wordwrap 85) . words
