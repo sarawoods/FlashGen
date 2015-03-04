@@ -207,7 +207,7 @@ class RightPanel(wx.Panel):
         self.width = self.bmp1.GetWidth()-70
         self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
 
-        self.text = wx.StaticText(self, label="",  style=(wx.ALIGN_CENTRE_HORIZONTAL| wx.TE_MULTILINE ))
+        self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE ))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
 
