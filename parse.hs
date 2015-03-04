@@ -4,7 +4,7 @@
 	Author: Brendan Cicchi
 	Team: Brendan Cicchi, Remington Maxwell, Sara Woods
 	
-	Summary: 
+	Summary: Parser
 		1) reads contents of input file
 		2) removes leading white space from the lines of file
 		3) filters lines which have the relevant symbols attached to them:

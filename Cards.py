@@ -1,3 +1,20 @@
+'''
+    Program: FlashGen
+    File: Cards.py
+    Team: Brendan Cicchi, Remington Maxwell, Sara Woods
+
+    Summary: Class Cards
+        Methods:
+            next    -> move to next card in the array
+                        go to first card if past last
+            prev    -> move to previous card in the array
+                         go to last card if past zero
+            flip    -> change the face of the card, flip it
+            shuffle -> rearrange the array of cards randomly
+            getInfo -> return the string to be shown on the card face
+'''
+import random
+
 class Cards:
     def __init__(self, JSON):
         self.JSON = JSON
