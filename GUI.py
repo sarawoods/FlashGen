@@ -76,10 +76,10 @@ def getNotes(path):
     noteselftring = check_output(["runhaskell", "parse.hs", notesFile])
     # convert the string into a JSON object
     noteCardJSON = json.loads(noteselftring)
-    # generate GUI using the JSON
-
-
     return noteCardJSON
+
+
+
  
 
 ########################################################################
@@ -107,7 +107,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         test = a + str(i)
         
         sizer.AddSpacer(10)
-        notecardText="Notecard Text Appears Here"
+        notecardText= parent.cards.getInfo()
         #use test to loop through and add the notecards dynamically
         # show the bitmap, (5, 5) are upper left corner coordinates
 
@@ -176,16 +176,7 @@ class RightPanel(wx.Panel):
         """Constructor"""
 				# get the data
 
-        wildcard = "Text File (*.txt)|*.txt"
-        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
-        if dialog.ShowModal() == wx.ID_OK:
-            path = dialog.GetPath() 
-        else:
-            sys.exit("No text file selected") 
 
-        dialog.Destroy()
-        noteCardJSON = getNotes(path)
-        cards = Cards(noteCardJSON)
         wx.Panel.__init__(self, parent=parent)
         #load buttons
         # panel needed to display button correctly
@@ -201,7 +192,7 @@ class RightPanel(wx.Panel):
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
         pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, cards))
+        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, parent.cards))
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
 
 
@@ -210,21 +201,21 @@ class RightPanel(wx.Panel):
         image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
         pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, cards))
+        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, parent.cards))
         self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
 
         #Flip Button Init
         image3 = wx.Image(flipImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.flipButton = wx.BitmapButton(self, id=-1, bitmap=image3,
         pos=(970, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.flipButton.Bind(wx.EVT_BUTTON, lambda event: self.flipButtonClick(event, cards))
+        self.flipButton.Bind(wx.EVT_BUTTON, lambda event: self.flipButtonClick(event, parent.cards))
         self.flipButton.SetToolTip(wx.ToolTip("Go to Front/Back of Flashcard"))
 
         #Shuffle Button Init
         image4 = wx.Image(shuffleImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.shuffleButton = wx.BitmapButton(self, id=-1, bitmap=image4,
         pos=(10, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.shuffleButton.Bind(wx.EVT_BUTTON, lambda event: self.shuffleButtonClick(event, cards))
+        self.shuffleButton.Bind(wx.EVT_BUTTON, lambda event: self.shuffleButtonClick(event, parent.cards))
         self.shuffleButton.SetToolTip(wx.ToolTip("Shuffle the Deck of Cards"))
 
         #self.nextButton = wx.Button(self,label='Next', pos=(990,305), size=(80,50))
@@ -247,13 +238,13 @@ class RightPanel(wx.Panel):
         noteFront=wx.StaticBitmap(self, -1, self.bmp1, (100, 15))
 
         self.width = self.bmp1.GetWidth()-70
-        self.height = self.bmp1.GetHeight()/2-(14*(len(cards.getInfo())/85))
+        self.height = self.bmp1.GetHeight()/2-(14*(len(parent.cards.getInfo())/85))
 
         self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE ))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
 
-        self.updateText(cards)
+        self.updateText(parent.cards)
 
     # Gets the new text for the card, centers it, wraps it, and displays
     def updateText(self, cards):
@@ -270,27 +261,24 @@ class RightPanel(wx.Panel):
     #back button click event
     def backButtonClick(self,event, cards):
         cards.prev()
-        #self.updateText.Label = cards.getInfo()
         self.updateText(cards)
 
     #next button click event
     def nextButtonClick(self,event, cards):
         cards.next()
-        #self.updateText.Label = cards.getInfo()
         self.updateText(cards)
-
-
 
     #fliip button click event
     def flipButtonClick(self,event, cards):
         cards.flip()
-        #self.updateText.Label = cards.getInfo()
         self.updateText(cards)
 
     #shuffle button click event
     def shuffleButtonClick(self,event,cards):
-        #need to add shuffle here
+        cards.shuffle()
         self.updateText(cards)
+
+
 
 
 
@@ -304,8 +292,21 @@ class MyForm(wx.Frame):
     def __init__(self ):
         displaySize=wx.DisplaySize()
         wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/8 * 7))
+
+
+        wildcard = "Text File (*.txt)|*.txt"
+        dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
+        if dialog.ShowModal() == wx.ID_OK:
+            path = dialog.GetPath() 
+        else:
+            sys.exit("No text file selected") 
+
+        dialog.Destroy()
+
+        noteCardJSON = getNotes(path)
  
         splitter = wx.SplitterWindow(self)
+        splitter.cards = Cards(noteCardJSON)
         leftP = LeftPanel(splitter)
         rightP = RightPanel(splitter)
  
@@ -316,6 +317,7 @@ class MyForm(wx.Frame):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(splitter, 1, wx.EXPAND)
         self.SetSizer(sizer)
+
         
 #----------------------------------------------------------------------
 # Run the program
