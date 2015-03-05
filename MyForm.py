@@ -50,11 +50,12 @@ class MyForm(wx.Frame):
  
         splitter = wx.SplitterWindow(self)
         splitter.cards = Cards(noteCardJSON)
-        leftP = LeftPanel(splitter)
-        rightP = RightPanel(splitter)
+        splitter.rightP = RightPanel(splitter)
+        splitter.leftP = LeftPanel(splitter)
+
  
         # split the window
-        splitter.SplitVertically(leftP, rightP)
+        splitter.SplitVertically(splitter.leftP, splitter.rightP)
         splitter.SetMinimumPaneSize(250)
  
         sizer = wx.BoxSizer(wx.VERTICAL)
