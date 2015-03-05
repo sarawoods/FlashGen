@@ -15,7 +15,6 @@
 import wx
 import os
 import  cStringIO
-import wx.lib.buttons as buttons
 from wx.lib.wordwrap import wordwrap
 
 class RightPanel(wx.Panel):
