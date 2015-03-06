@@ -79,8 +79,9 @@ class RightPanel(wx.Panel):
 
     # Gets the new text for the card, centers it, wraps it, and displays
     def updateText(self, cards):
+        #set label to empty string so that no weird lag display problems can be seen
+        self.text.Label = ""
         newText = wordwrap(cards.getInfo(), 450, wx.ClientDC(self), breakLongWords=True, margin=0)
-        self.text.Label = newText
     
         sizer_h = wx.BoxSizer(wx.HORIZONTAL)
         sizer_v = wx.BoxSizer(wx.VERTICAL)
@@ -88,6 +89,7 @@ class RightPanel(wx.Panel):
         sizer_h.Add(sizer_v, 1, wx.CENTER)
         self.SetSizer(sizer_h) 
         sizer_h.Fit(self)
+        self.text.Label = newText
     
     #back button click event
     def backButtonClick(self,event,cards):
@@ -112,7 +114,7 @@ class RightPanel(wx.Panel):
             buttonText = wordwrap(cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
             buttonText = trimText(buttonText)
             button = frame.FindWindowByName(str(i))
+            button.Show(False)
             button.SetLabel(buttonText)
             #refresh the button
-            button.Show(False)
             button.Show(True)
