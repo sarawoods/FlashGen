@@ -12,6 +12,7 @@
 import wx
 import os
 import json
+import sys
 from subprocess import check_output
 from Cards import Cards
 from LeftPanel import LeftPanel
@@ -50,7 +51,7 @@ class MyForm(wx.Frame):
  
         splitter = wx.SplitterWindow(self)
         splitter.cards = Cards(noteCardJSON)
-        splitter.rightP = RightPanel(splitter)
+        splitter.rightP = RightPanel(splitter,self)
         splitter.leftP = LeftPanel(splitter)
 
  

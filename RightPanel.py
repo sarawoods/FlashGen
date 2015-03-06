@@ -10,16 +10,17 @@
             Next    -> go to next card
             Prev    -> go to previous card
             Flip    -> flip the face of the current card showing
-            Shuffle -> rearrange cards to random order
+            Shuffle -> rearrange cards to random order and update left Panel buttons
 '''
 import wx
 import os
 import  cStringIO
 from wx.lib.wordwrap import wordwrap
+from panelHelpers import trimText
 
 class RightPanel(wx.Panel):
     """Constructor"""
-    def __init__(self, parent):
+    def __init__(self, parent,frame):
         wx.Panel.__init__(self, parent=parent)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -53,7 +54,7 @@ class RightPanel(wx.Panel):
         image4 = wx.Image(shuffleImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.shuffleButton = wx.BitmapButton(self, id=-1, bitmap=image4,
         pos=(10, 520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.shuffleButton.Bind(wx.EVT_BUTTON, lambda event: self.shuffleButtonClick(event, parent.cards))
+        self.shuffleButton.Bind(wx.EVT_BUTTON, lambda event: self.shuffleButtonClick(event, parent.cards, frame))
         self.shuffleButton.SetToolTip(wx.ToolTip("Shuffle the Deck of Cards"))
                 
         #for displaying notecard image
@@ -89,21 +90,26 @@ class RightPanel(wx.Panel):
         sizer_h.Fit(self)
     
     #back button click event
-    def backButtonClick(self,event, cards):
+    def backButtonClick(self,event,cards):
         cards.prev()
         self.updateText(cards)
     
     #next button click event
-    def nextButtonClick(self,event, cards):
+    def nextButtonClick(self,event,cards):
         cards.next()
         self.updateText(cards)
     
     #fliip button click event
-    def flipButtonClick(self,event, cards):
+    def flipButtonClick(self,event,cards):
         cards.flip()
         self.updateText(cards)
     
-    #shuffle button click event
-    def shuffleButtonClick(self,event,cards):
+    #shuffle button click event // reassign every button to the appropriate card
+    def shuffleButtonClick(self,event,cards,frame):
         cards.shuffle()
-        self.updateText(cards)  
+        self.updateText(cards)
+        for i in range (0, len(cards.JSON)):
+            buttonText = wordwrap(cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
+            buttonText = trimText(buttonText)
+            button = frame.FindWindowByName(str(i))
+            button.SetLabel(buttonText)

@@ -19,6 +19,7 @@ import wx.lib.agw.aquabutton as AB
 import wx.lib.agw.gradientbutton as GB
 import wx.lib.platebtn as platebtn
 from wx.lib.wordwrap import wordwrap
+from panelHelpers import trimText
 
 class LeftPanel(scrolled.ScrolledPanel):
     """"""
@@ -47,15 +48,15 @@ class LeftPanel(scrolled.ScrolledPanel):
         for i in range (0, len(parent.cards.JSON)):
             buttonText = wordwrap(parent.cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
             buttonText = trimText(buttonText)
-            button = AB.AquaButton(self, label=buttonText, size=(220,170), id=i)
-            button.SetFont(wx.Font(6, wx.SWISS, wx.NORMAL, wx.BOLD))
-            button.SetBackgroundColour('#007db1')
-            button.SetForegroundColour("black")
-            button.SetHoverColour('#70caef')
-            button.Bind(wx.EVT_BUTTON, lambda event: self.selectButtonClick(event, parent))
+            parent.button = AB.AquaButton(self, label=buttonText, name=str(i), size=(220,170), id=i)
+            parent.button.SetFont(wx.Font(6, wx.SWISS, wx.NORMAL, wx.BOLD))
+            parent.button.SetBackgroundColour('#007db1')
+            parent.button.SetForegroundColour("black")
+            parent.button.SetHoverColour('#70caef')
+            parent.button.Bind(wx.EVT_BUTTON, lambda event: self.selectButtonClick(event, parent))
 
-            button.SetPulseOnFocus(False)
-            sizer.Add(button, 0, wx.CENTER|wx.ALL, 5)
+            parent.button.SetPulseOnFocus(False)
+            sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
             sizer.AddSpacer(10)
 
 
@@ -65,19 +66,5 @@ class LeftPanel(scrolled.ScrolledPanel):
 
     def selectButtonClick(self, event, parent):
         parent.cards.index = event.GetEventObject().GetId()
+        parent.cards.face = 'question'
         parent.rightP.updateText(parent.cards)
-        
-        
-        #self.SetScrollbar(wx.VERTICAL, 0, 10, 500);
- 
-########################################################################
-
-
-def trimText(text):
-    newLines = 0
-    for index in range(0, len(text)):
-        if text[index] == "\n":
-            newLines += 1
-            if newLines == 14:
-                return text[0:index]
-    return text
