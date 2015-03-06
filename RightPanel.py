@@ -113,3 +113,6 @@ class RightPanel(wx.Panel):
             buttonText = trimText(buttonText)
             button = frame.FindWindowByName(str(i))
             button.SetLabel(buttonText)
+            #refresh the button
+            button.Show(False)
+            button.Show(True)
