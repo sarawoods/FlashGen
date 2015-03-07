@@ -33,9 +33,11 @@ def getNotes(path):
 class MyForm(wx.Frame):
  
     #----------------------------------------------------------------------
-    def __init__(self ):
+    def __init__(self):
         displaySize=wx.DisplaySize()
         wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/8 * 7))
+        self.scroll = wx.ScrolledWindow(self, -1)
+        self.scroll.SetScrollbars(1, 1, displaySize[0], displaySize[1]/8 * 7)
 
 
         wildcard = "Text File (*.txt)|*.txt"
@@ -49,7 +51,9 @@ class MyForm(wx.Frame):
 
         noteCardJSON = getNotes(path)
  
+        #self.scroll.splitter = wx.SplitterWindow(self)
         splitter = wx.SplitterWindow(self)
+        #splitter = self.scroll.splitter
         splitter.cards = Cards(noteCardJSON)
         splitter.rightP = RightPanel(splitter,self)
         splitter.leftP = LeftPanel(splitter)

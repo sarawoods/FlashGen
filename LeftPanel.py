@@ -47,7 +47,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         displaySize=wx.DisplaySize()
         for i in range (0, len(parent.cards.JSON)):
             buttonText = wordwrap(parent.cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
-            buttonText = trimText(buttonText)
+            buttonText = trimText(buttonText, 14)
             parent.button = AB.AquaButton(self, label=buttonText, name=str(i), size=(220,170), id=i)
             parent.button.SetFont(wx.Font(6, wx.SWISS, wx.NORMAL, wx.BOLD))
             parent.button.SetBackgroundColour('#007db1')

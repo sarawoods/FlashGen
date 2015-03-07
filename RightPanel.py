@@ -17,11 +17,13 @@ import os
 import  cStringIO
 from wx.lib.wordwrap import wordwrap
 from panelHelpers import trimText
+import  wx.lib.scrolledpanel as scrolled
 
-class RightPanel(wx.Panel):
+class RightPanel(scrolled.ScrolledPanel):
     """Constructor"""
     def __init__(self, parent,frame):
-        wx.Panel.__init__(self, parent=parent)
+        scrolled.ScrolledPanel.__init__(self, parent=parent)
+        #wx.Panel.__init__(self, parent=parent)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         nextImage = "images\\buttons\\NextButtonNew.png"
@@ -70,7 +72,7 @@ class RightPanel(wx.Panel):
         self.width = self.bmp1.GetWidth()-70
         self.height = self.bmp1.GetHeight()/2-(14*(len(parent.cards.getInfo())/85))
 
-        self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE ))
+        self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
 
@@ -82,11 +84,12 @@ class RightPanel(wx.Panel):
         #set label to empty string so that no weird lag display problems can be seen
         self.text.Label = ""
         newText = wordwrap(cards.getInfo(), 450, wx.ClientDC(self), breakLongWords=True, margin=0)
+        newText = trimText(newText, 23)
     
         sizer_h = wx.BoxSizer(wx.HORIZONTAL)
         sizer_v = wx.BoxSizer(wx.VERTICAL)
         sizer_v.Add(self.text, 1, wx.CENTER)
-        sizer_h.Add(sizer_v, 1, wx.CENTER)
+        sizer_h.Add(sizer_v, 1, wx.CENTER| wx.BOTTOM, border=15 )
         self.SetSizer(sizer_h) 
         sizer_h.Fit(self)
         self.text.Label = newText
@@ -112,7 +115,7 @@ class RightPanel(wx.Panel):
         self.updateText(cards)
         for i in range (0, len(cards.JSON)):
             buttonText = wordwrap(cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
-            buttonText = trimText(buttonText)
+            buttonText = trimText(buttonText, 14)
             button = frame.FindWindowByName(str(i))
             button.Show(False)
             button.SetLabel(buttonText)
