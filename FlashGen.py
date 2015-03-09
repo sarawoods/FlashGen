@@ -16,6 +16,7 @@ if __name__ == "__main__":
 
     frame = MyForm()
     frame.Show()
+    
     #loadButton = wx.Button(frame, label='Open',pos=(225, 5), size=(80, 25))
     #saveButton = wx.Button(frame, label='Save',pos=(315, 5), size=(80, 25))
     #filename = wx.TextCtrl(frame, pos=(5, 5), size=(210, 25))
