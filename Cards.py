@@ -47,6 +47,16 @@ class Cards:
 	# shuffle -> returns the elements of array in a random order 
     def shuffle(self):
         random.shuffle(self.JSON)
+
+    def moveUp(self):
+        if self.index != 0:
+            self.JSON[self.index], self.JSON[self.index-1] = self.JSON[self.index-1], self.JSON[self.index]
+            self.index = self.index-1
+
+    def moveDown(self):
+        if self.index != len(self.JSON)-1:
+            self.JSON[self.index], self.JSON[self.index+1] = self.JSON[self.index+1], self.JSON[self.index]
+            self.index = self.index+1
 		
     def getInfo(self):
         if len(self.JSON) > 0:

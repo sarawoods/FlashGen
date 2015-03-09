@@ -31,6 +31,21 @@ class RightPanel(scrolled.ScrolledPanel):
         flipImage="images\\buttons\\FlipButton1.png"
         shuffleImage="images\\buttons\\ShuffleButton1.png"
 
+
+        #Move Up Button Init
+        image5 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap() # change picture!!!
+        self.upButton = wx.BitmapButton(self, id=-1, bitmap=image5,
+        pos=(0, 0), size=(image5.GetWidth()+5, image5.GetHeight()+5), style=wx.BU_AUTODRAW)
+        self.upButton.Bind(wx.EVT_BUTTON, lambda event: self.upButtonClick(event, parent.cards, frame))
+        self.upButton.SetToolTip(wx.ToolTip("Move current flash card up in the stack"))
+
+        #Move Down Button Init
+        image6 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap() # change picture!!!
+        self.downButton = wx.BitmapButton(self, id=-1, bitmap=image6,
+        pos=(0, image5.GetHeight()+5), size=(image6.GetWidth()+5, image6.GetHeight()+5), style=wx.BU_AUTODRAW)
+        self.downButton.Bind(wx.EVT_BUTTON, lambda event: self.downButtonClick(event, parent.cards, frame))
+        self.downButton.SetToolTip(wx.ToolTip("Move current flash card down in the stack"))
+
         #Next Button Init
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
@@ -113,6 +128,17 @@ class RightPanel(scrolled.ScrolledPanel):
     def shuffleButtonClick(self,event,cards,frame):
         cards.shuffle()
         self.updateText(cards)
+        self.updateLeftPanel(frame)
+
+    def upButtonClick(self, event, cards, frame):
+        cards.moveUp()
+        self.updateLeftPanel(cards, frame)
+
+    def downButtonClick(self, event, cards, frame):
+        cards.moveDown()
+        self.updateLeftPanel(cards, frame)
+
+    def updateLeftPanel(self, cards, frame):
         for i in range (0, len(cards.JSON)):
             buttonText = wordwrap(cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
             buttonText = trimText(buttonText, 14)
