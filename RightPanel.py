@@ -132,17 +132,23 @@ class RightPanel(scrolled.ScrolledPanel):
     
     #shuffle button click event // reassign every button to the appropriate card
     def shuffleButtonClick(self,event,cards,frame):
+        self.removeHighlight(cards, frame)
         cards.shuffle()
         self.updateText(cards)
         self.updateLeftPanel(frame)
+        self.addHighlight(cards, frame)
 
     def upButtonClick(self, event, cards, frame):
+        self.removeHighlight(cards, frame)
         cards.moveUp()
         self.updateLeftPanel(cards, frame)
+        self.addHighlight(cards, frame)
 
     def downButtonClick(self, event, cards, frame):
+        self.removeHighlight(cards, frame)
         cards.moveDown()
         self.updateLeftPanel(cards, frame)
+        self.addHighlight(cards, frame)
 
     def updateLeftPanel(self, cards, frame):
         for i in range (0, len(cards.JSON)):
@@ -157,7 +163,7 @@ class RightPanel(scrolled.ScrolledPanel):
     def removeHighlight(self, cards, frame):
         button = frame.FindWindowByName(str(cards.index))
         button.Show(False)
-        button.SetBackgroundColour('#5896B1')
+        button.SetBackgroundColour('#022331')
         button.Show(True)
 
     def addHighlight(self, cards, frame):

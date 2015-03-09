@@ -53,7 +53,7 @@ class LeftPanel(scrolled.ScrolledPanel):
             if i == 0:
                 parent.button.SetBackgroundColour('#007db1')
             else:
-                parent.button.SetBackgroundColour('#5896B1')
+                parent.button.SetBackgroundColour('#022331')
             parent.button.SetForegroundColour("black")
             parent.button.SetHoverColour('#C3E6F3')
             parent.button.Bind(wx.EVT_BUTTON, lambda event: self.selectButtonClick(event, parent, frame))
