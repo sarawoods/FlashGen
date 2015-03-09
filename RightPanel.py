@@ -54,7 +54,7 @@ class RightPanel(scrolled.ScrolledPanel):
         image1 = wx.Image(nextImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.nextButton = wx.BitmapButton(self, id=-1, bitmap=image1,
         pos=(990, 305), size=(image1.GetWidth()+5, image1.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, parent.cards))
+        self.nextButton.Bind(wx.EVT_BUTTON, lambda event: self.nextButtonClick(event, parent.cards, frame))
         self.nextButton.SetToolTip(wx.ToolTip("Go to Next Flashcard"))
         sizer.Add(self.nextButton, 0, wx.CENTER|wx.ALL, 5)
 
@@ -62,7 +62,7 @@ class RightPanel(scrolled.ScrolledPanel):
         image2 = wx.Image(previousImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.backButton = wx.BitmapButton(self, id=-1, bitmap=image2,
         pos=(15, 305), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
-        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, parent.cards))
+        self.backButton.Bind(wx.EVT_BUTTON, lambda event: self.backButtonClick(event, parent.cards, frame))
         self.backButton.SetToolTip(wx.ToolTip("Go to Previous Flashcard"))
         sizer.Add(self.backButton, 0, wx.CENTER|wx.ALL, 5)
 
@@ -122,14 +122,18 @@ class RightPanel(scrolled.ScrolledPanel):
         self.text.Label = newText
     
     #back button click event
-    def backButtonClick(self,event,cards):
+    def backButtonClick(self,event,cards, frame):
+        self.removeHighlight(cards, frame)
         cards.prev()
         self.updateText(cards)
+        self.addHighlight(cards, frame)
     
     #next button click event
-    def nextButtonClick(self,event,cards):
+    def nextButtonClick(self,event,cards, frame):
+        self.removeHighlight(cards, frame)
         cards.next()
         self.updateText(cards)
+        self.addHighlight(cards, frame)
     
     #fliip button click event
     def flipButtonClick(self,event,cards):
@@ -138,17 +142,23 @@ class RightPanel(scrolled.ScrolledPanel):
     
     #shuffle button click event // reassign every button to the appropriate card
     def shuffleButtonClick(self,event,cards,frame):
+        self.removeHighlight(cards, frame)
         cards.shuffle()
         self.updateText(cards)
-        self.updateLeftPanel(frame)
+        self.updateLeftPanel(cards,frame)
+        self.addHighlight(cards, frame)
 
     def upButtonClick(self, event, cards, frame):
+        self.removeHighlight(cards, frame)
         cards.moveUp()
         self.updateLeftPanel(cards, frame)
+        self.addHighlight(cards, frame)
 
     def downButtonClick(self, event, cards, frame):
+        self.removeHighlight(cards, frame)
         cards.moveDown()
         self.updateLeftPanel(cards, frame)
+        self.addHighlight(cards, frame)
 
     def updateLeftPanel(self, cards, frame):
         for i in range (0, len(cards.JSON)):
@@ -159,3 +169,15 @@ class RightPanel(scrolled.ScrolledPanel):
             button.SetLabel(buttonText)
             #refresh the button
             button.Show(True)
+
+    def removeHighlight(self, cards, frame):
+        button = frame.FindWindowByName(str(cards.index))
+        button.Show(False)
+        button.SetBackgroundColour('#022331')
+        button.Show(True)
+
+    def addHighlight(self, cards, frame):
+        button = frame.FindWindowByName(str(cards.index))
+        button.Show(False)
+        button.SetBackgroundColour('#007db1')
+        button.Show(True)

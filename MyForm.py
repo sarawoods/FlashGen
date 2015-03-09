@@ -59,7 +59,7 @@ class MyForm(wx.Frame):
         #splitter = self.scroll.splitter
         splitter.cards = Cards(noteCardJSON)
         splitter.rightP = RightPanel(splitter,self)
-        splitter.leftP = LeftPanel(splitter)
+        splitter.leftP = LeftPanel(splitter, self)
 
  
         # split the window
