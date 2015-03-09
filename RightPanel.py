@@ -135,7 +135,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.removeHighlight(cards, frame)
         cards.shuffle()
         self.updateText(cards)
-        self.updateLeftPanel(frame)
+        self.updateLeftPanel(cards,frame)
         self.addHighlight(cards, frame)
 
     def upButtonClick(self, event, cards, frame):
