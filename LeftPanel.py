@@ -25,7 +25,7 @@ class LeftPanel(scrolled.ScrolledPanel):
     """"""
  
     #----------------------------------------------------------------------
-    def __init__(self, parent):
+    def __init__(self, parent, frame):
         """Constructor"""
         scrolled.ScrolledPanel.__init__(self, parent=parent)
 
@@ -50,10 +50,14 @@ class LeftPanel(scrolled.ScrolledPanel):
             buttonText = trimText(buttonText, 14)
             parent.button = AB.AquaButton(self, label=buttonText, name=str(i), size=(220,170), id=i)
             parent.button.SetFont(wx.Font(6, wx.SWISS, wx.NORMAL, wx.BOLD))
-            parent.button.SetBackgroundColour('#007db1')
+            if i == 0:
+                parent.button.SetBackgroundColour('#007db1')
+            else:
+                parent.button.SetBackgroundColour('#5896B1')
             parent.button.SetForegroundColour("black")
-            parent.button.SetHoverColour('#70caef')
-            parent.button.Bind(wx.EVT_BUTTON, lambda event: self.selectButtonClick(event, parent))
+            parent.button.SetHoverColour('#C3E6F3')
+            parent.button.Bind(wx.EVT_BUTTON, lambda event: self.selectButtonClick(event, parent, frame))
+            parent.button.SetPulseOnFocus(True)
 
             parent.button.SetPulseOnFocus(False)
             sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
@@ -64,7 +68,9 @@ class LeftPanel(scrolled.ScrolledPanel):
         self.SetAutoLayout(1)
         self.SetupScrolling()
 
-    def selectButtonClick(self, event, parent):
+    def selectButtonClick(self, event, parent, frame):
+        parent.rightP.removeHighlight(parent.cards, frame)
         parent.cards.index = event.GetEventObject().GetId()
         parent.cards.face = 'question'
         parent.rightP.updateText(parent.cards)
+        parent.rightP.addHighlight(parent.cards, frame)
