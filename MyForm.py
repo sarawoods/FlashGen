@@ -118,7 +118,5 @@ class MyForm(wx.Frame):
         self.splitter.cards = Cards(newCards)
         LeftPanel.createButtons(self.splitter.leftP, self.splitter, self)
         RightPanel.updateText(self.splitter.rightP, self.splitter.cards)
+        #self.splitter.leftP.SetSizer(self.splitter.leftP.sizer)
         self.splitter.leftP.SetupScrolling()
-
-
-        

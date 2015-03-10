@@ -44,13 +44,13 @@ class LeftPanel(scrolled.ScrolledPanel):
         image2 = wx.Image(imageFile, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         bmp1 = wx.Bitmap(imageFile, wx.BITMAP_TYPE_ANY)
         notecardText = "Display Notecard text here"
-        self.sizer.AddSpacer(10)
+        self.spacer = self.sizer.AddSpacer(10)
         displaySize=wx.DisplaySize()
 
         self.createButtons(parent, frame)
 
         self.SetSizer(self.sizer)
-        self.SetAutoLayout(1)
+        #self.SetAutoLayout(1)
         self.SetupScrolling()
 
 
@@ -78,4 +78,4 @@ class LeftPanel(scrolled.ScrolledPanel):
 
             parent.button.SetPulseOnFocus(False)
             self.sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
-            self.sizer.AddSpacer(10)
+            #self.sizer.AddSpacer(10)
