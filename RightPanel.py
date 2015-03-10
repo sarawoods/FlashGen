@@ -24,6 +24,7 @@ import  wx.lib.scrolledpanel as scrolled
 class RightPanel(scrolled.ScrolledPanel):
     """Constructor"""
     def __init__(self, parent,frame):
+
         scrolled.ScrolledPanel.__init__(self, parent=parent, style=wx.ALWAYS_SHOW_SB)
         
         sizer = wx.BoxSizer(wx.VERTICAL)

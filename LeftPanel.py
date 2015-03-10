@@ -29,6 +29,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         """Constructor"""
         scrolled.ScrolledPanel.__init__(self, parent=parent)
 
+
  
         #grid = gridlib.Grid(self)
         #grid.CreateGrid(100,2)
@@ -37,14 +38,30 @@ class LeftPanel(scrolled.ScrolledPanel):
         data = open(imageFile, "rb").read()
         # convert to a data stream
         stream = cStringIO.StringIO(data)
-        sizer = wx.BoxSizer(wx.VERTICAL)
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
         # convert to a bitmap
         bmp = wx.BitmapFromImage( wx.ImageFromStream( stream ))
         image2 = wx.Image(imageFile, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         bmp1 = wx.Bitmap(imageFile, wx.BITMAP_TYPE_ANY)
         notecardText = "Display Notecard text here"
-        sizer.AddSpacer(10)
+        self.sizer.AddSpacer(10)
         displaySize=wx.DisplaySize()
+
+        self.createButtons(parent, frame)
+
+        self.SetSizer(self.sizer)
+        self.SetAutoLayout(1)
+        self.SetupScrolling()
+
+
+    def selectButtonClick(self, event, parent, frame):
+        parent.rightP.removeHighlight(parent.cards, frame)
+        parent.cards.index = event.GetEventObject().GetId()
+        parent.cards.face = 'question'
+        parent.rightP.updateText(parent.cards)
+        parent.rightP.addHighlight(parent.cards, frame)
+
+    def createButtons(self, parent, frame):
         for i in range (0, len(parent.cards.JSON)):
             buttonText = wordwrap(parent.cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
             buttonText = trimText(buttonText, 14)
@@ -60,17 +77,5 @@ class LeftPanel(scrolled.ScrolledPanel):
             parent.button.SetPulseOnFocus(True)
 
             parent.button.SetPulseOnFocus(False)
-            sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
-            sizer.AddSpacer(10)
-
-
-        self.SetSizer(sizer)
-        self.SetAutoLayout(1)
-        self.SetupScrolling()
-
-    def selectButtonClick(self, event, parent, frame):
-        parent.rightP.removeHighlight(parent.cards, frame)
-        parent.cards.index = event.GetEventObject().GetId()
-        parent.cards.face = 'question'
-        parent.rightP.updateText(parent.cards)
-        parent.rightP.addHighlight(parent.cards, frame)
+            self.sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
+            self.sizer.AddSpacer(10)

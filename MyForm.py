@@ -52,23 +52,24 @@ class MyForm(wx.Frame):
 
         dialog.Destroy()
 
+        self.sizer = wx.BoxSizer(wx.VERTICAL)
+        self.splitter = wx.SplitterWindow(self)
+
         noteCardJSON = getNotes(path)
  
         #self.scroll.splitter = wx.SplitterWindow(self)
-        splitter = wx.SplitterWindow(self)
+        
         #splitter = self.scroll.splitter
-        splitter.cards = Cards(noteCardJSON)
-        splitter.rightP = RightPanel(splitter,self)
-        splitter.leftP = LeftPanel(splitter, self)
+        self.splitter.cards = Cards(noteCardJSON)
+        self.splitter.rightP = RightPanel(self.splitter,self)
+        self.splitter.leftP = LeftPanel(self.splitter, self)
 
- 
         # split the window
-        splitter.SplitVertically(splitter.leftP, splitter.rightP)
-        splitter.SetMinimumPaneSize(250)
- 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(splitter, 1, wx.EXPAND)
-        self.SetSizer(sizer)
+        self.splitter.SplitVertically(self.splitter.leftP, self.splitter.rightP)
+
+        self.splitter.SetMinimumPaneSize(250)
+        self.sizer.Add(self.splitter, 1, wx.EXPAND)
+        self.SetSizer(self.sizer)
 
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
@@ -78,14 +79,15 @@ class MyForm(wx.Frame):
         fitem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
         
         menubar.Append(fileMenu, '&File')
+
+
         self.SetMenuBar(menubar)
         
         
         self.Bind(wx.EVT_MENU, self.OnQuit, fitem)
-        #self.Bind(wx.EVT_MENU, self.OnOpen, newitem)
+        self.Bind(wx.EVT_MENU, self.OnOpen, newitem)
         self.Bind(wx.EVT_MENU, self.OnAbout, aboutitem)
         self.Bind(wx.EVT_MENU, self.OnHelp, helpitem)
-        self.Bind(wx.EVT_MENU, lambda event: self.OnOpen(event, splitter))
 
     def OnQuit(self, e):
         self.Close()
@@ -93,34 +95,30 @@ class MyForm(wx.Frame):
         #to be completed
     def OnAbout(self, e):
         self.Close()
+        
         #to be completed
     def OnHelp(self, e):
         self.Close()
 
-    def OnOpen(self, e, splitthis):
+    def OnOpen(self, e):
         wildcard = "Text File (*.txt)|*.txt"
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
             path = dialog.GetPath() 
         else:
             sys.exit("No text file selected") 
-
         dialog.Destroy()
-        #splitthis.Clear()
-        noteCardJSON = getNotes(path)
-        #self.scroll.splitter = wx.SplitterWindow(self)
-        splitter = wx.SplitterWindow(self)
-        #splitter = self.scroll.splitter
-        splitter.cards = Cards(noteCardJSON)
-        splitter.rightP = RightPanel(splitter,self)
-        splitter.leftP = LeftPanel(splitter)
 
- 
-        # split the window
-        splitter.SplitVertically(splitter.leftP, splitter.rightP)
-        splitter.SetMinimumPaneSize(250)
- 
-        sizer = wx.BoxSizer(wx.VERTICAL)
-        sizer.Add(splitter, 1, wx.EXPAND)
-        self.SetSizer(sizer)
+        newCards = getNotes(path)
+        # destroy all the card buttons in the left panel
+        for i in range (0, len(self.splitter.cards.JSON)):
+            button = self.FindWindowByName(str(i))
+            button.Destroy()
+        # set the new cards, create buttons for the left panel, update the card for the right panel
+        self.splitter.cards = Cards(newCards)
+        LeftPanel.createButtons(self.splitter.leftP, self.splitter, self)
+        RightPanel.updateText(self.splitter.rightP, self.splitter.cards)
+        self.splitter.leftP.SetupScrolling()
+
+
         
