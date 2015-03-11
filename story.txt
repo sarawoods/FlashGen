@@ -1,6 +1,0 @@
-~Why are doughnuts so yummy?
-					| awesome
-					| cool beans
-					> word
-					> fosho
-					> ight
