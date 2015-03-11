@@ -91,7 +91,6 @@ rm_mark :: String -> String
 rm_mark [] = []
 rm_mark (x:xs) = strip xs
 
-
 -- regex -> use a regular expression to parse input
 regex :: String -> Maybe (String, String, String, [String])
 regex [] = Nothing

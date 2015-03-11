@@ -113,7 +113,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.text.Label = ""
         newText = wordwrap(cards.getInfo(), 450, wx.ClientDC(self), breakLongWords=True, margin=0)
         newText = trimText(newText, 23)
-    
+
         sizer_h = wx.BoxSizer(wx.HORIZONTAL)
         sizer_v = wx.BoxSizer(wx.VERTICAL)
         sizer_v.Add(self.text, 1, wx.CENTER)

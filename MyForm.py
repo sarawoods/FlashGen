@@ -38,10 +38,10 @@ class MyForm(wx.Frame):
         no_resize = wx.DEFAULT_FRAME_STYLE & ~ (wx.RESIZE_BORDER | 
                                                wx.RESIZE_BOX | 
                                                 wx.MAXIMIZE_BOX)
-        wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/8 * 7), style=no_resize)
+        wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/8 * 7), style= no_resize)
         #self.panel = wx.ScrolledWindow(self, wx.ID_ANY)
-        #self.panel.SetScrollbars(1, 1, 1,1)
-
+        ico = wx.Icon('images\\icons\\FlashGen.ico', wx.BITMAP_TYPE_ICO)
+        self.SetIcon(ico)
 
         wildcard = "Text File (*.txt)|*.txt"
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
@@ -49,7 +49,6 @@ class MyForm(wx.Frame):
             path = dialog.GetPath() 
         else:
             sys.exit("No text file selected") 
-
         dialog.Destroy()
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
@@ -73,30 +72,60 @@ class MyForm(wx.Frame):
 
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
+
+        qmi = wx.MenuItem(fileMenu, wx.ID_OPEN, '&Open\tCtrl+O')
+        qmi.SetBitmap(wx.Bitmap('images\\icons\\open.png'))
+        fileMenu.AppendItem(qmi)
+        self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
+
+        qmi = wx.MenuItem(fileMenu, wx.ID_EXIT, '&Quit\tCtrl+Q')
+        qmi.SetBitmap(wx.Bitmap('images\\icons\\exit.png'))
+        fileMenu.AppendItem(qmi)
+        self.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
+
         helpMenu = wx.Menu()
-        newitem = fileMenu.Append(wx.ID_OPEN, 'Open', 'Open New TextFile')
-        helpitem = helpMenu.Append(wx.ID_HELP, 'Help', 'Help')
-        aboutitem = helpMenu.Append(wx.ID_ABOUT, 'About This Program', 'About This Program')
-        fitem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
-        
+
+        qmi = wx.MenuItem(helpMenu, wx.ID_ABOUT, '&About')
+        qmi.SetBitmap(wx.Bitmap('images\\icons\\about.png'))
+        helpMenu.AppendItem(qmi)
+        self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
+
+        qmi = wx.MenuItem(helpMenu, wx.ID_HELP, '&Help\tCtrl+H')
+        qmi.SetBitmap(wx.Bitmap('images\\icons\\help.png'))
+        helpMenu.AppendItem(qmi)
+        self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
+
+
         menubar.Append(fileMenu, '&File')
         menubar.Append(helpMenu, '&Help')
-
-
         self.SetMenuBar(menubar)
-        
-        
-        self.Bind(wx.EVT_MENU, self.OnQuit, fitem)
-        self.Bind(wx.EVT_MENU, self.OnOpen, newitem)
-        self.Bind(wx.EVT_MENU, self.OnAbout, aboutitem)
-        self.Bind(wx.EVT_MENU, self.OnHelp, helpitem)
 
     def OnQuit(self, e):
         self.Close()
 
-        #to be completed
+    #display an about dialog to the user
     def OnAbout(self, e):
-        self.Close()
+        description = """
+        FlashGen is a flash card generator designed to accept
+        a user specified .txt file to be parsed into note cards
+        displayed by the GUI.
+        This application is designed to replace existing generators
+        which require users to enter their cards manually in the GUI.
+        FlashGen looks to simplify this process, while providing a
+        more friendly and practical learning environment.
+        """
+
+        info = wx.AboutDialogInfo()
+
+        info.SetIcon(wx.Icon('images\\FlashGen.png', wx.BITMAP_TYPE_PNG))
+        info.SetName('FlashGen')
+        info.SetVersion('1.0')
+        info.SetDescription(description)
+        info.SetWebSite('http://www.github.com/sarawoods/FlashGen')
+        info.AddDeveloper('Brendan Cicchi\nRemington Maxwell\nSara Woods')
+
+        wx.AboutBox(info)
+
         
         #to be completed
     def OnHelp(self, e):
