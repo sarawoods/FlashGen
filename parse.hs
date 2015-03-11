@@ -1,7 +1,6 @@
 {-
 	Program: FlashGen
 	File: parse.hs
-	Author: Brendan Cicchi
 	Team: Brendan Cicchi, Remington Maxwell, Sara Woods
 	
 	Summary: Parser
@@ -68,15 +67,23 @@ tup2str_rec (Just(_,m,nm,_)) = m ++ tup2str_rec (regex nm)
 list2tup :: [String] -> [(String,[String],[String])]
 list2tup [] = []
 list2tup (x:xs)
-	| (head x == '~') = [(rm_mark x,(getList xs '|'),(getList xs '>'))] {-
+	| (head x == '~') = [(rm_mark x,(getListO xs),(getListA xs))] {-
 						-} ++ list2tup xs
 	| otherwise = list2tup xs
 
--- getList -> form a list of all c's following '~' before the next one
-getList :: [String] -> Char -> [String]
-getList [] _ = []
-getList (x:xs) c
-	| head x == c = [(rm_mark x)] ++ getList xs c
+-- getListO -> form a list of all '|' following '~' before the next one
+getListO :: [String] -> [String]
+getListO [] = []
+getListO (x:xs)
+	| head x == '|' = [(rm_mark x)] ++ getListO xs
+	| otherwise = []
+
+-- getListA -> form a list of all '>' following '~' or '|' before the next '~'
+getListA :: [String] -> [String]
+getListA [] = []
+getListA (x:xs)
+	| (head x == '|') = getListA xs
+	| (head x == '>') = [(rm_mark x)] ++ getListA xs
 	| otherwise = []
 
 -- rem_mark -> remove the markers from the string
@@ -100,23 +107,3 @@ jsonize (q,o,a) = "{ " ++ "\"question\": " ++ show q ++ ", \"options\": " ++{-
 	([|][^~>]+)*	followed by zero or more "|"s with no "~" or ">"
 	(>[^~|]+)*		followed by zero or more ">"" with no "~" or "|"
 -}
-
--- ["The", "The quick", "The quick brown", ...]
-concats = scanl1 (\s v -> s ++ " " ++ v)
-
--- takes list of words, returns list of lines
-wordwrap :: Int -> [String] -> [String]
-wordwrap maxwidth [] = []
-wordwrap maxwidth ws = sentence : (wordwrap maxwidth restwords)
-    where
-        zipped = zip (concats ws) ws
-        (sentences, rest) = span (\(s,w) -> (length s) <= maxwidth) zipped
-        sentence = last (map fst sentences)
-        restwords = map snd rest
-
-spacer:: (String, [String], [String]) -> (String, [String], [String])
-spacer (q, o, a) = (fs q, (map fs o), (map fs  a))
-	where
-		fs = (intercalate "\n") . (wordwrap 85) . words
-
-

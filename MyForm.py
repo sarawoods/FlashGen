@@ -73,12 +73,14 @@ class MyForm(wx.Frame):
 
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
+        helpMenu = wx.Menu()
         newitem = fileMenu.Append(wx.ID_OPEN, 'Open', 'Open New TextFile')
-        helpitem = fileMenu.Append(wx.ID_HELP, 'Help', 'Help')
-        aboutitem = fileMenu.Append(wx.ID_ABOUT, 'About This Program', 'About This Program')
+        helpitem = helpMenu.Append(wx.ID_HELP, 'Help', 'Help')
+        aboutitem = helpMenu.Append(wx.ID_ABOUT, 'About This Program', 'About This Program')
         fitem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
         
         menubar.Append(fileMenu, '&File')
+        menubar.Append(helpMenu, '&Help')
 
 
         self.SetMenuBar(menubar)
