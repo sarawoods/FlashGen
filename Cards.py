@@ -62,9 +62,9 @@ class Cards:
         if len(self.JSON) > 0:
             if self.face == "question":
                 question = self.JSON[self.index][self.face]
-                options = ""
+                options = "\n"
                 for opt in self.JSON[self.index]["options"]:
-                    options = "\n\n" + options + "    - " + opt
+                    options =  options + "\n" + "    - " + opt
                 return question + options
             else:
                 answers = ""
