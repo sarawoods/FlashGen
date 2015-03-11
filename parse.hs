@@ -1,7 +1,6 @@
 {-
 	Program: FlashGen
 	File: parse.hs
-	Author: Brendan Cicchi
 	Team: Brendan Cicchi, Remington Maxwell, Sara Woods
 	
 	Summary: Parser
