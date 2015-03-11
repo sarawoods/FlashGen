@@ -69,7 +69,6 @@ class MyForm(wx.Frame):
 
         self.splitter.SetMinimumPaneSize(250)
         self.sizer.Add(self.splitter, 1, wx.EXPAND)
-        self.sizer.Add(self.splitter,1, wx.EXPAND)
         self.SetSizer(self.sizer)
 
         menubar = wx.MenuBar()
