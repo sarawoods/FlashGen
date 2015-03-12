@@ -129,7 +129,39 @@ class MyForm(wx.Frame):
         
         #to be completed
     def OnHelp(self, e):
-        self.Close()
+        help_txt = """
+        Here is how to format your text file:
+
+        ~ This is a question
+        | This is an option to the question
+        > This is my answer to the question
+            Text on a new line will not be taken
+                > indentation does not matter
+        > (~,|,>) must be at the beginning of the line
+
+        This > | ~ will not work but don't worry,
+        nothing will crash.
+
+        Any extraneous lines with no symbol will never
+        become a card, so feel free to enter these
+        anywhere in the .txt file.
+
+        | This is invalid syntax and will be ignored
+
+        ~ You can also have a question by itself
+        but you can't do this with answers or options
+    
+
+        Check out our github to see the README
+        """
+        help = wx.AboutDialogInfo()
+        help.SetName('FlashGen')
+        help.SetVersion('1.0')
+        help.SetIcon(wx.Icon('images\\icons\\FlashGen.ico', wx.BITMAP_TYPE_ICO))
+        help.SetDescription(help_txt)
+        help.SetWebSite('http://www.github.com/sarawoods/FlashGen')
+
+        wx.AboutBox(help)
 
     def OnOpen(self, e):
         wildcard = "Text File (*.txt)|*.txt"
