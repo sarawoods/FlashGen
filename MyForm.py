@@ -40,7 +40,7 @@ class MyForm(wx.Frame):
                                                 wx.MAXIMIZE_BOX)
         wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/12 * 11), style= no_resize)
         #self.panel = wx.ScrolledWindow(self, wx.ID_ANY)
-        ico = wx.Icon('images\\icons\\FlashGen.ico', wx.BITMAP_TYPE_ICO)
+        ico = wx.Icon('images/icons/FlashGen.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(ico)
 
         wildcard = "Text File (*.txt)|*.txt"
@@ -74,24 +74,24 @@ class MyForm(wx.Frame):
         fileMenu = wx.Menu()
 
         qmi = wx.MenuItem(fileMenu, wx.ID_OPEN, '&Open\tCtrl+O')
-        qmi.SetBitmap(wx.Bitmap('images\\icons\\open.png'))
+        qmi.SetBitmap(wx.Bitmap('images/icons/open.png'))
         fileMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
 
         qmi = wx.MenuItem(fileMenu, wx.ID_EXIT, '&Quit\tCtrl+Q')
-        qmi.SetBitmap(wx.Bitmap('images\\icons\\exit.png'))
+        qmi.SetBitmap(wx.Bitmap('images/icons/exit.png'))
         fileMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
 
         helpMenu = wx.Menu()
 
         qmi = wx.MenuItem(helpMenu, wx.ID_ABOUT, '&About')
-        qmi.SetBitmap(wx.Bitmap('images\\icons\\about.png'))
+        qmi.SetBitmap(wx.Bitmap('images/icons/about.png'))
         helpMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
 
         qmi = wx.MenuItem(helpMenu, wx.ID_HELP, '&Help\tCtrl+H')
-        qmi.SetBitmap(wx.Bitmap('images\\icons\\help.png'))
+        qmi.SetBitmap(wx.Bitmap('images/icons/help.png'))
         helpMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
 
@@ -117,7 +117,7 @@ class MyForm(wx.Frame):
 
         info = wx.AboutDialogInfo()
 
-        info.SetIcon(wx.Icon('images\\FlashGen.png', wx.BITMAP_TYPE_PNG))
+        info.SetIcon(wx.Icon('images/FlashGen.png', wx.BITMAP_TYPE_PNG))
         info.SetName('FlashGen')
         info.SetVersion('1.0')
         info.SetDescription(description)
