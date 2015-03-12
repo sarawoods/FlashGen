@@ -34,7 +34,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         #grid = gridlib.Grid(self)
         #grid.CreateGrid(100,2)
  
-        imageFile='images/borders/Notecard Border 1.png'
+        imageFile='images/borders/Notecard_Border_1.png'
         data = open(imageFile, "rb").read()
         # convert to a data stream
         stream = cStringIO.StringIO(data)
