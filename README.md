@@ -1,6 +1,6 @@
 ﻿README
 ===
-Downloads
+1. Downloads
 ---
 	* Download python 2.7
 		* https://www.python.org/ftp/python/2.7.9/python-2.7.9.msi
@@ -20,7 +20,7 @@ Downloads
 		* https://www.haskell.org/platform/
 		* Make sure to select the platform for your appropriate operating system
 
-Instructions
+2. Instructions
 ---
 	* Using your preferred shell, navigate to where you have placed the directory of this project
 	* Proceed to the folder containing FlashGen.py
