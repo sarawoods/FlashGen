@@ -28,12 +28,12 @@ class RightPanel(scrolled.ScrolledPanel):
         scrolled.ScrolledPanel.__init__(self, parent=parent)#, style=wx.ALWAYS_SHOW_SB)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
-        nextImage = "images\\buttons\\NextButtonNew.png"
-        previousImage="images\\buttons\\BackButtonNew.png"
-        flipImage="images\\buttons\\FlipButton1.png"
-        shuffleImage="images\\buttons\\ShuffleButton1.png"
-        upImage="images\\buttons\\UpButton.png"
-        downImage="images\\buttons\\DownButton.png"
+        nextImage = "images/buttons/NextButtonNew.png"
+        previousImage="images/buttons/BackButtonNew.png"
+        flipImage="images/buttons/FlipButton1.png"
+        shuffleImage="images/buttons/ShuffleButton1.png"
+        upImage="images/buttons/UpButton.png"
+        downImage="images/buttons/DownButton.png"
 
 
         #Move Up Button Init
@@ -84,7 +84,7 @@ class RightPanel(scrolled.ScrolledPanel):
         sizer.Add(self.shuffleButton, 0, wx.CENTER|wx.ALL, 5)
                 
         #for displaying notecard image
-        imageFile1='images\\borders\\Notecard Border.png'
+        imageFile1='images/borders/Notecard Border.png'
         data = open(imageFile1, "rb").read()
         # convert to a data stream
         stream = cStringIO.StringIO(data)

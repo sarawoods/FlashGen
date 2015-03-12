@@ -137,7 +137,7 @@ class MyForm(wx.Frame):
         > This is my answer to the question
             Text on a new line will not be taken
                 > indentation does not matter
-        > (~,|,>) must be at the beginning of the line
+        > (~ | >) must be at the beginning of the line
 
         This > | ~ will not work but don't worry,
         nothing will crash.
@@ -157,7 +157,7 @@ class MyForm(wx.Frame):
         help = wx.AboutDialogInfo()
         help.SetName('FlashGen')
         help.SetVersion('1.0')
-        help.SetIcon(wx.Icon('images\\icons\\FlashGen.ico', wx.BITMAP_TYPE_ICO))
+        help.SetIcon(wx.Icon('images/icons/FlashGen.ico', wx.BITMAP_TYPE_ICO))
         help.SetDescription(help_txt)
         help.SetWebSite('http://www.github.com/sarawoods/FlashGen')
 
