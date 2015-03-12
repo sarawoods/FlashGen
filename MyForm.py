@@ -38,7 +38,7 @@ class MyForm(wx.Frame):
         no_resize = wx.DEFAULT_FRAME_STYLE & ~ (wx.RESIZE_BORDER | 
                                                wx.RESIZE_BOX | 
                                                 wx.MAXIMIZE_BOX)
-        wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/8 * 7), style= no_resize)
+        wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/12 * 11), style= no_resize)
         #self.panel = wx.ScrolledWindow(self, wx.ID_ANY)
         ico = wx.Icon('images\\icons\\FlashGen.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(ico)

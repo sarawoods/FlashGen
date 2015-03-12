@@ -25,7 +25,7 @@ class RightPanel(scrolled.ScrolledPanel):
     """Constructor"""
     def __init__(self, parent,frame):
         
-        scrolled.ScrolledPanel.__init__(self, parent=parent, style=wx.ALWAYS_SHOW_SB)
+        scrolled.ScrolledPanel.__init__(self, parent=parent)#, style=wx.ALWAYS_SHOW_SB)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         nextImage = "images\\buttons\\NextButtonNew.png"
@@ -90,8 +90,14 @@ class RightPanel(scrolled.ScrolledPanel):
         stream = cStringIO.StringIO(data)
         # convert to a bitmap
         self.bmp1 = wx.BitmapFromImage( wx.ImageFromStream( stream ))
-        # show the bitmap, (5, 5) are upper left corner coordinates
+        numCards=str(parent.cards.index) + "/" + str(len(parent.cards.getInfo())-1)
+        displaySize=wx.DisplaySize()
         noteFront=wx.StaticBitmap(self, -1, self.bmp1, (100, 15))
+        self.textNumber = wx.StaticText(self, label= "",  style=(wx.TE_MULTILINE), pos=(displaySize[0]/3 + 60,610))
+        self.textNumber.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        self.textNumber.SetSize(self.textNumber.GetBestSize())
+        # show the bitmap, (5, 5) are upper left corner coordinates
+        
 
         self.width = self.bmp1.GetWidth()-70
         self.height = self.bmp1.GetHeight()/2-(14*(len(parent.cards.getInfo())/85))
@@ -99,8 +105,8 @@ class RightPanel(scrolled.ScrolledPanel):
         self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
-        self.messButton = wx.BitmapButton(self, id=-1, bitmap=image4,
-        pos=(1500, 3520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
+       # self.messButton = wx.BitmapButton(self, id=-1, bitmap=image4,
+       # pos=(1500, 3520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
         
         self.updateText(parent.cards)
         #self.SetAutoLayout(1)
@@ -121,6 +127,10 @@ class RightPanel(scrolled.ScrolledPanel):
         self.SetSizer(sizer_h) 
         sizer_h.Fit(self)
         self.text.Label = newText
+        #self.textNumber = wx.StaticText(self, label= numCards,  style=(wx.TE_MULTILINE), pos=(displaySize[0]/3 + 60,610))
+        #self.textNumber.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
+        #self.textNumber.SetSize(self.textNumber.GetBestSize())
+        self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
     
     #back button click event
     def backButtonClick(self,event,cards, frame):
@@ -154,12 +164,14 @@ class RightPanel(scrolled.ScrolledPanel):
         cards.moveUp()
         self.updateLeftPanel(cards, frame)
         self.addHighlight(cards, frame)
+        self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
 
     def downButtonClick(self, event, cards, frame):
         self.removeHighlight(cards, frame)
         cards.moveDown()
         self.updateLeftPanel(cards, frame)
         self.addHighlight(cards, frame)
+        self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
 
     def updateLeftPanel(self, cards, frame):
         for i in range (0, len(cards.JSON)):
