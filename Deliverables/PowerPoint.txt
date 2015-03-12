@@ -1,27 +1,40 @@
-Flash Card "Power Point Presentation"
+﻿Flash Card "Power Point Presentation"
+
 
 Brendan
-~ What was is our project?
+~ What was our project?
 > A Flash Card generator.
+We are using this presentation to demonstrate the versatility of our application. Who needs powerpoint?
+
+
 
 
 Remington
-Save resources, go away from paper flash cards
+Save resources, go away from paper flash cards which are a pain to write out and carry around 
+Many online flash card generators have an overwhelming amount of unnecessary options
+Typing notes in class and then needing to retype them in a flash card generator is repetitive.  Most students would be too lazy to do this.
 ~ What is the motivation behind this project?
 > Current flash card generators are tedious.
 > Have to type notes directly into the GUI.
 
+
 Sara
 Better version of microsoft powerpoint.
+.txt files are universally accepted, so these can be used across platforms
+show this file as an example!
 ~ How is our generator better?
 > Type up your notes as usual.
 > Include special identifiers for questions(~), options(|), and answers(>).
 > We parse it and make a GUI.
 
 
+Remington
 Oh no, this is in the wrong spot!!!
-~ Conclusion: What did we learn?
-> 
+~ Conclusion: Do you have any questions?
+| Yes
+| No
+> https://github.com/sarawoods/FlashGen
+
 
 
 
@@ -33,20 +46,24 @@ Brendan
 | Prolog
 > Haskell!
 
+
 Remington
 ~ How did we create the GUI?
 > Python library WXPython was used for GUI generation.
+Originally looked at other GUIs, but the buttons were very old looking and we wanted a fresh, appealing program design.
+Main feature was adding preview pane on left side, used buttons to implement this so that left preview pane updates the right pane
+
 
 Sara
 ~ How did we get the parser (Haskell) and the GUI (Python) to communicate?
-> Tried and failed to create a DLL. Haskell no longer outputs the correct files to create such a library.
+> Tried and failed to create a DLL. Haskell no longer outputs the required files to create such a library.
 > Ended up calling the Haskell program directly from the main Python program.
 > Notecard information is passed as a JSON object.
 
+
+Brendan
 ~ What are some cool features of this project?
 > We allow for shuffling of the cards. 
 > You can also pick the order.
 > To open a new text file with notes just go to "File/Open"
 > The highlighting on the side corresponds to which flash card is being displayed.
-
-
