@@ -186,7 +186,7 @@ class RightPanel(scrolled.ScrolledPanel):
     def removeHighlight(self, cards, frame):
         button = frame.FindWindowByName(str(cards.index))
         button.Show(False)
-        button.SetBackgroundColour('#022331')
+        button.SetBackgroundColour('#044059')
         button.Show(True)
 
     def addHighlight(self, cards, frame):
