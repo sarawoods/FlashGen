@@ -49,7 +49,7 @@ Brendan
 
 Remington
 ~ How did we create the GUI?
-> Python library WXPython was used for GUI generation.
+> Python library WxPython was used for GUI generation.
 Originally looked at other GUIs, but the buttons were very old looking and we wanted a fresh, appealing program design.
 Main feature was adding preview pane on left side, used buttons to implement this so that left preview pane updates the right pane
 
@@ -65,5 +65,5 @@ Brendan
 ~ What are some cool features of this project?
 > We allow for shuffling of the cards. 
 > You can also pick the order.
-> To open a new text file with notes just go to "File/Open"
-> The highlighting on the side corresponds to which flash card is being displayed.
+> To load a new text file with notes just go to "File/Open"
+> The highlighting on the preview on the left side corresponds to which flash card is being displayed.
