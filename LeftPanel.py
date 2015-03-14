@@ -7,9 +7,6 @@
     Summary: Class LeftPanel
         Displays the small cards on the left hand side
         Can be used similar to powerpoint to go to a specific card
-        
-        Buttons:
-            Each card is actually a button
 '''
 import wx
 import  cStringIO
@@ -22,17 +19,10 @@ from wx.lib.wordwrap import wordwrap
 from panelHelpers import trimText
 
 class LeftPanel(scrolled.ScrolledPanel):
-    """"""
- 
     #----------------------------------------------------------------------
     def __init__(self, parent, frame):
         """Constructor"""
         scrolled.ScrolledPanel.__init__(self, parent=parent)
-
-
- 
-        #grid = gridlib.Grid(self)
-        #grid.CreateGrid(100,2)
  
         imageFile='images/borders/Notecard_Border_1.png'
         data = open(imageFile, "rb").read()
@@ -50,10 +40,9 @@ class LeftPanel(scrolled.ScrolledPanel):
         self.createButtons(parent, frame)
 
         self.SetSizer(self.sizer)
-        #self.SetAutoLayout(1)
         self.SetupScrolling()
 
-
+    # the event handler attached to every button
     def selectButtonClick(self, event, parent, frame):
         parent.rightP.removeHighlight(parent.cards, frame)
         parent.cards.index = event.GetEventObject().GetId()
@@ -61,6 +50,7 @@ class LeftPanel(scrolled.ScrolledPanel):
         parent.rightP.updateText(parent.cards)
         parent.rightP.addHighlight(parent.cards, frame)
 
+    # creating all left panel buttons based on the number of objects in cards
     def createButtons(self, parent, frame):
         for i in range (0, len(parent.cards.JSON)):
             buttonText = wordwrap(parent.cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
@@ -78,4 +68,3 @@ class LeftPanel(scrolled.ScrolledPanel):
 
             parent.button.SetPulseOnFocus(False)
             self.sizer.Add(parent.button, 0, wx.CENTER|wx.ALL, 5)
-            #self.sizer.AddSpacer(10)

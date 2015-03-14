@@ -5,13 +5,15 @@
 
     Summary: Class Cards
         Methods:
-            next    -> move to next card in the array
+            next     -> move to next card in the array
                         go to first card if past last
-            prev    -> move to previous card in the array
+            prev     -> move to previous card in the array
                          go to last card if past zero
-            flip    -> change the face of the card, flip it
-            shuffle -> rearrange the array of cards randomly
-            getInfo -> return the string to be shown on the card face
+            flip     -> change the face of the card, flip it
+            shuffle  -> rearrange the array of cards randomly
+            moveUp   -> move the selected card on the left panel up
+            moveDown -> move the selected card on the left panel down
+            getInfo  -> return the string to be shown on the card face
 '''
 import random
 
@@ -21,13 +23,15 @@ class Cards:
         self.index = 0
         self.face = "question"
 	
+    # next -> increments the index of the list of cards
     def next(self):
         if self.index == len(self.JSON) - 1:
             self.index = 0
         else:
             self.index = self.index + 1
         self.face = "question"
-		
+	
+    # prev -> decrements the index of the list of cards
     def prev(self):
         if self.index == 0:
             self.index = len(self.JSON) -1
@@ -48,16 +52,19 @@ class Cards:
     def shuffle(self):
         random.shuffle(self.JSON)
 
+    # moveUp -> switches the content of the cards object at the index with the content of the previous element
     def moveUp(self):
         if self.index != 0:
             self.JSON[self.index], self.JSON[self.index-1] = self.JSON[self.index-1], self.JSON[self.index]
             self.index = self.index-1
 
+    # moveDown -> switches the content of the cards object at the index with the content of the next element
     def moveDown(self):
         if self.index != len(self.JSON)-1:
             self.JSON[self.index], self.JSON[self.index+1] = self.JSON[self.index+1], self.JSON[self.index]
             self.index = self.index+1
 		
+    # getInfo -> returns the text of the current face of the card at index
     def getInfo(self):
         if len(self.JSON) > 0:
             if self.face == "question":

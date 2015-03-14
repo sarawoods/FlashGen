@@ -25,7 +25,7 @@ class RightPanel(scrolled.ScrolledPanel):
     """Constructor"""
     def __init__(self, parent,frame):
         
-        scrolled.ScrolledPanel.__init__(self, parent=parent)#, style=wx.ALWAYS_SHOW_SB)
+        scrolled.ScrolledPanel.__init__(self, parent=parent)
         
         sizer = wx.BoxSizer(wx.VERTICAL)
         nextImage = "images/buttons/NextButtonNew.png"
@@ -43,6 +43,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.upButton.Bind(wx.EVT_BUTTON, lambda event: self.upButtonClick(event, parent.cards, frame))
         self.upButton.SetToolTip(wx.ToolTip("Move current flash card up in the stack"))
         sizer.Add(self.upButton, 0, wx.CENTER|wx.ALL, 5)
+
         #Move Down Button Init
         image6 = wx.Image(downImage, wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         self.downButton = wx.BitmapButton(self, id=-1, bitmap=image6,
@@ -96,8 +97,6 @@ class RightPanel(scrolled.ScrolledPanel):
         self.textNumber = wx.StaticText(self, label= "",  style=(wx.TE_MULTILINE), pos=(displaySize[0]/3 + 60,610))
         self.textNumber.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.textNumber.SetSize(self.textNumber.GetBestSize())
-        # show the bitmap, (5, 5) are upper left corner coordinates
-        
 
         self.width = self.bmp1.GetWidth()-70
         self.height = self.bmp1.GetHeight()/2-(14*(len(parent.cards.getInfo())/85))
@@ -105,12 +104,8 @@ class RightPanel(scrolled.ScrolledPanel):
         self.text = wx.StaticText(self, label="",  style=(wx.TE_MULTILINE))
         self.text.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
         self.text.SetSize(self.text.GetBestSize())
-       # self.messButton = wx.BitmapButton(self, id=-1, bitmap=image4,
-       # pos=(1500, 3520), size=(image2.GetWidth()+5, image2.GetHeight()+5), style=wx.BU_AUTODRAW)
         
         self.updateText(parent.cards)
-        #self.SetAutoLayout(1)
-
         self.SetupScrolling()
 
     # Gets the new text for the card, centers it, wraps it, and displays
@@ -127,9 +122,6 @@ class RightPanel(scrolled.ScrolledPanel):
         self.SetSizer(sizer_h) 
         sizer_h.Fit(self)
         self.text.Label = newText
-        #self.textNumber = wx.StaticText(self, label= numCards,  style=(wx.TE_MULTILINE), pos=(displaySize[0]/3 + 60,610))
-        #self.textNumber.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.BOLD))
-        #self.textNumber.SetSize(self.textNumber.GetBestSize())
         self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
     
     #back button click event
@@ -146,12 +138,12 @@ class RightPanel(scrolled.ScrolledPanel):
         self.updateText(cards)
         self.addHighlight(cards, frame)
     
-    #fliip button click event
+    # flip button click event
     def flipButtonClick(self,event,cards):
         cards.flip()
         self.updateText(cards)
     
-    #shuffle button click event // reassign every button to the appropriate card
+    # shuffle button click event // reassign every button to the appropriate card
     def shuffleButtonClick(self,event,cards,frame):
         self.removeHighlight(cards, frame)
         cards.shuffle()
@@ -159,6 +151,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.updateLeftPanel(cards,frame)
         self.addHighlight(cards, frame)
 
+    # up botton click event // change the highlight and the index of the currrent card
     def upButtonClick(self, event, cards, frame):
         self.removeHighlight(cards, frame)
         cards.moveUp()
@@ -166,6 +159,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.addHighlight(cards, frame)
         self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
 
+    # down botton click event // change the highlight and the index of the currrent card
     def downButtonClick(self, event, cards, frame):
         self.removeHighlight(cards, frame)
         cards.moveDown()
@@ -173,6 +167,7 @@ class RightPanel(scrolled.ScrolledPanel):
         self.addHighlight(cards, frame)
         self.textNumber.Label=str(cards.index+1) + "/" + str(len(cards.JSON))
 
+    # update left panel when cards' order is changed
     def updateLeftPanel(self, cards, frame):
         for i in range (0, len(cards.JSON)):
             buttonText = wordwrap(cards.JSON[i]['question'], 250, wx.ClientDC(self), breakLongWords=True, margin=0)
@@ -183,12 +178,14 @@ class RightPanel(scrolled.ScrolledPanel):
             #refresh the button
             button.Show(True)
 
+    # remove highlight from button
     def removeHighlight(self, cards, frame):
         button = frame.FindWindowByName(str(cards.index))
         button.Show(False)
         button.SetBackgroundColour('#044059')
         button.Show(True)
 
+    # add highlight to button
     def addHighlight(self, cards, frame):
         button = frame.FindWindowByName(str(cards.index))
         button.Show(False)

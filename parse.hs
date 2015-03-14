@@ -67,23 +67,23 @@ tup2str_rec (Just(_,m,nm,_)) = m ++ tup2str_rec (regex nm)
 list2tup :: [String] -> [(String,[String],[String])]
 list2tup [] = []
 list2tup (x:xs)
-	| (head x == '~') = [(rm_mark x,(getListO xs),(getListA xs))] {-
+	| (head x == '~') = [(rm_mark x,(getOptions xs),(getAnswers xs))] {-
 						-} ++ list2tup xs
 	| otherwise = list2tup xs
 
--- getListO -> form a list of all '|' following '~' before the next one
-getListO :: [String] -> [String]
-getListO [] = []
-getListO (x:xs)
-	| head x == '|' = [(rm_mark x)] ++ getListO xs
+-- getOptions -> form a list of all '|' following '~' before the next one
+getOptions :: [String] -> [String]
+getOptions [] = []
+getOptions (x:xs)
+	| head x == '|' = [(rm_mark x)] ++ getOptions xs
 	| otherwise = []
 
--- getListA -> form a list of all '>' following '~' or '|' before the next '~'
-getListA :: [String] -> [String]
-getListA [] = []
-getListA (x:xs)
-	| (head x == '|') = getListA xs
-	| (head x == '>') = [(rm_mark x)] ++ getListA xs
+-- getAnswers -> form a list of all '>' following '~' or '|' before the next '~'
+getAnswers :: [String] -> [String]
+getAnswers [] = []
+getAnswers (x:xs)
+	| (head x == '|') = getAnswers xs
+	| (head x == '>') = [(rm_mark x)] ++ getAnswers xs
 	| otherwise = []
 
 -- rem_mark -> remove the markers from the string

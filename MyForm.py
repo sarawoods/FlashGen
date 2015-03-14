@@ -5,7 +5,7 @@
 
     Summary: Class MyForm
         Provides the initial file upload dialogue to obtain file path
-        Creates the outermost shell of the GUI
+        Creates the outermost shell of the GUI including the menubar
         Calls the Haskell parser which returns formatted JSON
         
 '''
@@ -39,10 +39,10 @@ class MyForm(wx.Frame):
                                                wx.RESIZE_BOX | 
                                                 wx.MAXIMIZE_BOX)
         wx.Frame.__init__(self, None, title="FlashGen", size=(displaySize[0], displaySize[1]/12 * 11), style= no_resize)
-        #self.panel = wx.ScrolledWindow(self, wx.ID_ANY)
         ico = wx.Icon('images/icons/FlashGen.ico', wx.BITMAP_TYPE_ICO)
         self.SetIcon(ico)
 
+        # create the file dialog to get a file path from the user
         wildcard = "Text File (*.txt)|*.txt"
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
         if dialog.ShowModal() == wx.ID_OK:
@@ -51,55 +51,53 @@ class MyForm(wx.Frame):
             sys.exit("No text file selected") 
         dialog.Destroy()
 
+        # create formatting for window
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.splitter = wx.SplitterWindow(self)
 
         noteCardJSON = getNotes(path)
- 
-        #self.scroll.splitter = wx.SplitterWindow(self)
-        
-        #splitter = self.scroll.splitter
+
         self.splitter.cards = Cards(noteCardJSON)
         self.splitter.rightP = RightPanel(self.splitter,self)
         self.splitter.leftP = LeftPanel(self.splitter, self)
 
-        # split the window
+        # split the window for the separate panels
         self.splitter.SplitVertically(self.splitter.leftP, self.splitter.rightP)
-
         self.splitter.SetMinimumPaneSize(250)
         self.sizer.Add(self.splitter, 1, wx.EXPAND)
         self.SetSizer(self.sizer)
 
+        # create the menu bar at the top of the GUI
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
+        helpMenu = wx.Menu()
 
+        # create open option in file menu with image and hotkey
         qmi = wx.MenuItem(fileMenu, wx.ID_OPEN, '&Open\tCtrl+O')
         qmi.SetBitmap(wx.Bitmap('images/icons/open.png'))
         fileMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnOpen, id=wx.ID_OPEN)
-
+        # create quit option in file menu with image and hotkey
         qmi = wx.MenuItem(fileMenu, wx.ID_EXIT, '&Quit\tCtrl+Q')
         qmi.SetBitmap(wx.Bitmap('images/icons/exit.png'))
         fileMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnQuit, id=wx.ID_EXIT)
-
-        helpMenu = wx.Menu()
-
+        # create about option in help menu with image
         qmi = wx.MenuItem(helpMenu, wx.ID_ABOUT, '&About')
         qmi.SetBitmap(wx.Bitmap('images/icons/about.png'))
         helpMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
-
+        # create help option in help menu with image and hotkey
         qmi = wx.MenuItem(helpMenu, wx.ID_HELP, '&Help\tCtrl+H')
         qmi.SetBitmap(wx.Bitmap('images/icons/help.png'))
         helpMenu.AppendItem(qmi)
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
 
-
         menubar.Append(fileMenu, '&File')
         menubar.Append(helpMenu, '&Help')
         self.SetMenuBar(menubar)
 
+    # quit event
     def OnQuit(self, e):
         self.Close()
 
@@ -114,7 +112,6 @@ class MyForm(wx.Frame):
         FlashGen looks to simplify this process, while providing a
         more friendly and practical learning environment.
         """
-
         info = wx.AboutDialogInfo()
 
         info.SetIcon(wx.Icon('images/FlashGen.png', wx.BITMAP_TYPE_PNG))
@@ -127,7 +124,7 @@ class MyForm(wx.Frame):
         wx.AboutBox(info)
 
         
-        #to be completed
+    #display help dialog to the user on how to format .txt file
     def OnHelp(self, e):
         help_txt = """
         Here is how to format your text file:
@@ -163,6 +160,7 @@ class MyForm(wx.Frame):
 
         wx.AboutBox(help)
 
+    # display open dialog to user to get a new file path
     def OnOpen(self, e):
         wildcard = "Text File (*.txt)|*.txt"
         dialog = wx.FileDialog(None, "Choose a file", os.getcwd(), "", wildcard, wx.OPEN)
@@ -181,5 +179,4 @@ class MyForm(wx.Frame):
         self.splitter.cards = Cards(newCards)
         LeftPanel.createButtons(self.splitter.leftP, self.splitter, self)
         RightPanel.updateText(self.splitter.rightP, self.splitter.cards)
-        #self.splitter.leftP.SetSizer(self.splitter.leftP.sizer)
         self.splitter.leftP.SetupScrolling()
