@@ -1,5 +1,9 @@
 ﻿README
 ===
+ATTENTION
+---
+  * At this time, FlashGen does not work for Macs and Linux as the WxPython.
+    WxPython is aware of the problem and are attempting to fix it.
 1. Downloads
 ---
   * Download python 2.7
